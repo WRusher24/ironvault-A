@@ -176,7 +176,7 @@ export default function ExerciseSheet({
                 <>
                   <ImagePlus className="h-6 w-6" />
                   <span className="text-xs font-bold">اضغط لرفع صورة — جهاز، قبضة، أو إعداد</span>
-                  <span className="text-[10px]">JPG · PNG · WebP — حتى ٥ ميغابايت</span>
+                  <span className="text-[10px]">JPG · PNG · WebP — حتى 5 ميغابايت</span>
                 </>
               )}
             </button>

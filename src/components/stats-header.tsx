@@ -9,7 +9,7 @@ import {
   Sparkles,
   Trophy,
 } from "lucide-react";
-import { formatWeight, greetingAr, sinceLabelAr, toArabicDigits } from "@/lib/format";
+import { formatCount, formatWeight, greetingAr, sinceLabelAr } from "@/lib/format";
 
 interface Featured {
   id: string;
@@ -86,7 +86,7 @@ export default function StatsHeader({
             <Trophy className="h-4 w-4" />
             <span className="text-[10px] font-black text-slate-400">أرقام قياسية</span>
           </div>
-          <p className="tabular mt-1.5 text-2xl font-black text-white">{toArabicDigits(prs)}</p>
+          <p className="tabular mt-1.5 text-2xl font-black text-white">{formatCount(prs)}</p>
           <p className="text-[10px] font-semibold text-slate-500">رقم محطَّم</p>
         </div>
 
@@ -96,7 +96,7 @@ export default function StatsHeader({
             <span className="text-[10px] font-black text-slate-400">سلسلة النشاط</span>
           </div>
           <p className="tabular mt-1.5 text-2xl font-black text-white">
-            {toArabicDigits(streakWeeks)}
+            {formatCount(streakWeeks)}
             <span className="text-xs font-bold text-slate-500"> أسبوع</span>
           </p>
           <p className={`text-[10px] font-bold ${trainedThisWeek ? "text-volt-400" : "text-slate-500"}`}>
@@ -109,7 +109,7 @@ export default function StatsHeader({
             <Sparkles className="h-4 w-4" />
             <span className="text-[10px] font-black text-slate-400">سجلات</span>
           </div>
-          <p className="tabular mt-1.5 text-2xl font-black text-white">{toArabicDigits(entries)}</p>
+          <p className="tabular mt-1.5 text-2xl font-black text-white">{formatCount(entries)}</p>
           <p className="text-[10px] font-semibold text-slate-500">
             {lastPrDate ? `آخر PR: ${sinceLabelAr(lastPrDate)}` : "سجل تدريبي"}
           </p>

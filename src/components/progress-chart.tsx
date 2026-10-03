@@ -42,8 +42,10 @@ export default function ProgressChart({ points }: { points: ChartPoint[] }) {
     const innerH = H - PAD.top - PAD.bottom;
     const n = points.length;
 
+    // Strictly chronological reading: index 0 (oldest) on the far LEFT,
+    // newest on the far RIGHT — natural left→right time progression.
     const x = (i: number) =>
-      n === 1 ? PAD.start + innerW / 2 : PAD.start + innerW - (i / (n - 1)) * innerW; // RTL: newest left… actually chronological right→left; index 0 (oldest) at far left edge? Keep oldest at "start" (right in RTL visually). With RTL page, chart reads right→left naturally, so oldest at rightmost = large x.
+      n === 1 ? PAD.start + innerW / 2 : PAD.start + (i / (n - 1)) * innerW;
     const y = (w: number) => PAD.top + innerH - ((w - min) / (max - min)) * innerH;
 
     const coords = points.map((p, i) => ({

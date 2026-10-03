@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq, lt, max } from "drizzle-orm";
+import { and, eq, max } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { categories, exercises, prEntries } from "@/db/schema";
 import { requireUser } from "@/lib/guard";
+import { recomputePrs } from "@/lib/prs";
 
 export const dynamic = "force-dynamic";
 
@@ -90,17 +91,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "التمرين غير موجود" }, { status: 404 });
   }
 
-  // True PR = weight strictly above every entry that existed before this date
-  // (supports backdating correctly). `beatsAllTime` drives the celebration.
-  const [historical] = await db
-    .select({ max: max(prEntries.weightKg) })
-    .from(prEntries)
-    .where(
-      and(
-        eq(prEntries.exerciseId, exerciseId),
-        lt(prEntries.performedAt, data.performedAt),
-      ),
-    );
+  // TRUE PR semantics — a PR is exclusively the absolute highest weight ever
+  // recorded for this exercise:
+  //   • weight >  all-time max → NEW RECORD → celebration + PR flag
+  //   • weight == all-time max → ties the record → PR flag (no celebration)
+  //   • weight <  all-time max → ordinary entry, never a PR
   const [allTime] = await db
     .select({ max: max(prEntries.weightKg) })
     .from(prEntries)
@@ -108,12 +103,7 @@ export async function POST(req: NextRequest) {
 
   const previousBest = allTime?.max ?? null;
   const isNewRecord = previousBest === null || data.weightKg > previousBest;
-  const isPrAtDate =
-    data.performedAt >= todayServer()
-      ? isNewRecord
-      : historical?.max === null || historical === undefined
-        ? true
-        : data.weightKg > historical.max;
+  const isPr = previousBest === null || data.weightKg >= previousBest;
 
   const [entry] = await db
     .insert(prEntries)
@@ -124,19 +114,16 @@ export async function POST(req: NextRequest) {
       reps: data.reps,
       note: data.note || null,
       performedAt: data.performedAt,
-      isPr: isPrAtDate,
+      isPr,
     })
     .returning();
+
+  // A backdated high weight reshapes the ceiling → re-derive every flag
+  // so only entries at the current all-time max stay highlighted.
+  await recomputePrs(exerciseId);
 
   return NextResponse.json(
     { entry, isNewRecord, exerciseId, previousBest },
     { status: 201 },
   );
-}
-
-function todayServer(): string {
-  const d = new Date();
-  const m = `${d.getMonth() + 1}`.padStart(2, "0");
-  const day = `${d.getDate()}`.padStart(2, "0");
-  return `${d.getFullYear()}-${m}-${day}`;
 }

@@ -4,7 +4,7 @@ import { Download, Mail, Smartphone } from "lucide-react";
 import { db } from "@/db";
 import { categories, exercises, prEntries } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth";
-import { formatDateAr, toArabicDigits } from "@/lib/format";
+import { formatCount, formatDateAr } from "@/lib/format";
 import CategoryManager from "@/components/category-manager";
 import LogoutButton from "@/components/logout-button";
 
@@ -69,20 +69,20 @@ export default async function ProfilePage() {
 
         <div className="mt-5 grid grid-cols-4 gap-2 border-t border-iron-700 pt-4 text-center">
           <div>
-            <p className="tabular text-lg font-black text-volt-400">{toArabicDigits(stats?.prs ?? 0)}</p>
+            <p className="tabular text-lg font-black text-volt-400">{formatCount(stats?.prs ?? 0)}</p>
             <p className="text-[9px] font-bold text-slate-500">أرقام قياسية</p>
           </div>
           <div>
-            <p className="tabular text-lg font-black text-white">{toArabicDigits(stats?.entries ?? 0)}</p>
+            <p className="tabular text-lg font-black text-white">{formatCount(stats?.entries ?? 0)}</p>
             <p className="text-[9px] font-bold text-slate-500">سجل</p>
           </div>
           <div>
-            <p className="tabular text-lg font-black text-white">{toArabicDigits(exCount?.count ?? 0)}</p>
+            <p className="tabular text-lg font-black text-white">{formatCount(exCount?.count ?? 0)}</p>
             <p className="text-[9px] font-bold text-slate-500">تمرين</p>
           </div>
           <div>
             <p className="tabular text-lg font-black text-ice-300">
-              {stats?.topWeight ? toArabicDigits(Math.round(stats.topWeight)) : "—"}
+              {stats?.topWeight ? formatCount(Math.round(stats.topWeight)) : "—"}
             </p>
             <p className="text-[9px] font-bold text-slate-500">أثقل وزن (كجم)</p>
           </div>

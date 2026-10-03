@@ -1,32 +1,38 @@
-/** Formatting helpers — Arabic-first, weights stay in Latin digits (gym convention). */
+/**
+ * Formatting helpers — Arabic-first UI copy, but ALL numerals are strictly
+ * standard Western digits (0–9): weights, dates, reps, and counters are never
+ * rendered in Eastern Arabic numerals (٠–٩).
+ */
 
-const arDate = new Intl.DateTimeFormat("ar-EG", {
+const LATIN = "latn"; // Unicode numbering-system extension → forces 0-9 glyphs
+
+const arDate = new Intl.DateTimeFormat(`ar-EG-u-nu-${LATIN}`, {
   day: "numeric",
   month: "long",
   year: "numeric",
 });
 
-const arDateShort = new Intl.DateTimeFormat("ar-EG", {
+const arDateShort = new Intl.DateTimeFormat(`ar-EG-u-nu-${LATIN}`, {
   day: "numeric",
   month: "short",
 });
 
-const arWeekday = new Intl.DateTimeFormat("ar-EG", {
+const arWeekday = new Intl.DateTimeFormat(`ar-EG-u-nu-${LATIN}`, {
   weekday: "long",
 });
 
-/** "١٢ يناير ٢٠٢٦" */
+/** "12 يناير 2026" — Arabic words, Western digits. */
 export function formatDateAr(iso: string | Date): string {
   const d = typeof iso === "string" ? new Date(iso + (iso.length === 10 ? "T00:00:00" : "")) : iso;
   return arDate.format(d);
 }
 
-/** "٥ مارس" */
+/** "5 مارس" */
 export function formatDateArShort(iso: string): string {
   return arDateShort.format(new Date(iso + "T00:00:00"));
 }
 
-/** "السبت، ٥ مارس" */
+/** "السبت، 5 مارس" */
 export function formatDayAr(iso: string): string {
   const d = new Date(iso + "T00:00:00");
   return `${arWeekday.format(d)}، ${arDateShort.format(d)}`;
@@ -82,7 +88,7 @@ export function motivationalLine(input: MotivationInput): string {
     return "كل بطل بدأ من الصفر. سجّل أول رقم قياسي لك اليوم وابدأ الأسطورة.";
   }
   if (streakWeeks >= 4) {
-    return `${toArabicDigits(streakWeeks)} أسابيع من الانضباط الصارم — جسمك يُعيد تشكيل نفسه.`;
+    return `${streakWeeks} أسابيع من الانضباط الصارم — جسمك يُعيد تشكيل نفسه.`;
   }
   if (trainedThisWeek) {
     return "تدربت هذا الأسبوع، الخطوة القادمة: ارفع الحديد أكثر من المرة الماضية.";
@@ -90,25 +96,23 @@ export function motivationalLine(input: MotivationInput): string {
   return "الحديد ينتظرك. رقمك القياسي القادم أقرب مما تتخيل — اذهب واحصل عليه.";
 }
 
-const AR_DIGITS = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-
-/** Convert Western digits to Eastern Arabic-Indic digits for prose. */
-export function toArabicDigits(n: number | string): string {
-  return String(n).replace(/\d/g, (d) => AR_DIGITS[Number(d)]);
+/** Counters/quantities always render with standard Western numerals. */
+export function formatCount(n: number | string): string {
+  return String(n);
 }
 
-/** Relative "since" label in Arabic. */
+/** Relative "since" label in Arabic (Western digits). */
 export function sinceLabelAr(iso: string): string {
   const d = daysSince(iso);
   if (d <= 0) return "اليوم";
   if (d === 1) return "أمس";
   if (d === 2) return "قبل يومين";
-  if (d <= 10) return `قبل ${toArabicDigits(d)} أيام`;
-  if (d < 30) return `قبل ${toArabicDigits(d)} يومًا`;
+  if (d <= 10) return `قبل ${d} أيام`;
+  if (d < 30) return `قبل ${d} يومًا`;
   const weeks = Math.floor(d / 7);
-  if (weeks < 5) return weeks === 1 ? "قبل أسبوع" : `قبل ${toArabicDigits(weeks)} أسابيع`;
+  if (weeks < 5) return weeks === 1 ? "قبل أسبوع" : `قبل ${weeks} أسابيع`;
   const months = Math.floor(d / 30);
-  return months === 1 ? "قبل شهر" : `قبل ${toArabicDigits(months)} أشهر`;
+  return months === 1 ? "قبل شهر" : `قبل ${months} أشهر`;
 }
 
 /** Compute consecutive weekly training streak ending this week (or last). */

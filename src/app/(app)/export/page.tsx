@@ -9,7 +9,7 @@ import {
 import { db } from "@/db";
 import { exercises, prEntries } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth";
-import { toArabicDigits } from "@/lib/format";
+import { formatCount } from "@/lib/format";
 
 export const metadata: Metadata = { title: "تصدير البيانات" };
 export const dynamic = "force-dynamic";
@@ -56,15 +56,15 @@ export default async function ExportPage() {
 
         <div className="mt-5 grid grid-cols-3 gap-2.5 border-t border-iron-700 pt-5 text-center">
           <div>
-            <p className="tabular text-xl font-black text-white">{toArabicDigits(stats?.entries ?? 0)}</p>
+            <p className="tabular text-xl font-black text-white">{formatCount(stats?.entries ?? 0)}</p>
             <p className="text-[10px] font-bold text-slate-500">سجل تدريبي</p>
           </div>
           <div>
-            <p className="tabular text-xl font-black text-volt-400">{toArabicDigits(stats?.prs ?? 0)}</p>
+            <p className="tabular text-xl font-black text-volt-400">{formatCount(stats?.prs ?? 0)}</p>
             <p className="text-[10px] font-bold text-slate-500">رقم قياسي</p>
           </div>
           <div>
-            <p className="tabular text-xl font-black text-ice-300">{toArabicDigits(exCount?.count ?? 0)}</p>
+            <p className="tabular text-xl font-black text-ice-300">{formatCount(exCount?.count ?? 0)}</p>
             <p className="text-[10px] font-bold text-slate-500">تمرين</p>
           </div>
         </div>

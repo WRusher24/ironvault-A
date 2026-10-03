@@ -68,6 +68,7 @@ export const DEFAULT_CATEGORIES: {
   { name: "الظهر", nameEn: "Back", icon: "anchor", color: "cyan" },
   { name: "الأكتاف", nameEn: "Shoulders", icon: "mountain", color: "amber" },
   { name: "الأذرع", nameEn: "Arms", icon: "dumbbell", color: "violet" },
+  { name: "الترايسبس", nameEn: "Triceps", icon: "zap", color: "orange" },
   { name: "الأرجل", nameEn: "Legs", icon: "flame", color: "volt" },
   { name: "البطن والجذع", nameEn: "Core", icon: "target", color: "blue" },
 ];

@@ -12,7 +12,7 @@ import {
   Star,
 } from "lucide-react";
 import { categoryColor, categoryIcon } from "@/lib/categories";
-import { formatWeight, sinceLabelAr, toArabicDigits } from "@/lib/format";
+import { formatCount, formatWeight, sinceLabelAr } from "@/lib/format";
 import ExerciseSheet from "@/components/exercise-sheet";
 
 export interface DashboardExercise {
@@ -91,7 +91,7 @@ export default function SearchAndGrid({
           />
           {searching && (
             <span className="absolute end-4 top-1/2 -translate-y-1/2 rounded-full bg-volt-500/15 px-2.5 py-0.5 text-[10px] font-black text-volt-400">
-              {toArabicDigits(results.length)} نتيجة
+              {formatCount(results.length)} نتيجة
             </span>
           )}
         </div>
@@ -119,7 +119,7 @@ export default function SearchAndGrid({
           <div className="flex items-center justify-between px-1">
             <h2 className="text-sm font-black text-slate-300">المجموعات العضلية</h2>
             <span className="text-[11px] font-bold text-slate-500">
-              {toArabicDigits(allExercises.length)} تمرين · {toArabicDigits(categories.length)} فئة
+              {formatCount(allExercises.length)} تمرين · {formatCount(categories.length)} فئة
             </span>
           </div>
 
@@ -149,8 +149,8 @@ export default function SearchAndGrid({
                     <span className="block text-[11px] font-semibold text-slate-500">
                       {cat.nameEn ?? ""}{" "}
                       {cat.exercises.length > 0 &&
-                        `· ${toArabicDigits(cat.exercises.length)} تمرين`}
-                      {totalPrs > 0 && ` · ${toArabicDigits(totalPrs)} PR`}
+                        `· ${formatCount(cat.exercises.length)} تمرين`}
+                      {totalPrs > 0 && ` · ${formatCount(totalPrs)} PR`}
                     </span>
                   </span>
                   <ChevronDown
@@ -250,7 +250,7 @@ function ExerciseRow({
         <span className="block text-[11px] font-semibold text-slate-500">
           {showCategory && `${ex.categoryName} · `}
           {ex.entryCount > 0
-            ? `${toArabicDigits(ex.entryCount)} سجل${ex.lastDate ? ` · آخر ظهور ${sinceLabelAr(ex.lastDate)}` : ""}`
+            ? `${formatCount(ex.entryCount)} سجل${ex.lastDate ? ` · آخر ظهور ${sinceLabelAr(ex.lastDate)}` : ""}`
             : "لم يُسجَّل بعد"}
         </span>
       </span>

@@ -127,7 +127,7 @@ export default function AuthForm({ mode }: Props) {
                 type={showPassword ? "text" : "password"}
                 required
                 minLength={isRegister ? 8 : 1}
-                placeholder={isRegister ? "٨ أحرف على الأقل" : "كلمة المرور"}
+                placeholder={isRegister ? "8 أحرف على الأقل" : "كلمة المرور"}
                 className="w-full rounded-xl border border-iron-600 bg-iron-850 py-3 pe-11 ps-11 text-sm text-white placeholder:text-slate-500 focus:border-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/25"
               />
               <button

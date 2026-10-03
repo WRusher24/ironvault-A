@@ -61,6 +61,7 @@ const CATEGORIES = [
   { key: "back", name: "الظهر", nameEn: "Back", icon: "anchor", color: "cyan" },
   { key: "shoulders", name: "الأكتاف", nameEn: "Shoulders", icon: "mountain", color: "amber" },
   { key: "arms", name: "الأذرع", nameEn: "Arms", icon: "dumbbell", color: "violet" },
+  { key: "triceps", name: "الترايسبس", nameEn: "Triceps", icon: "zap", color: "orange" },
   { key: "legs", name: "الأرجل", nameEn: "Legs", icon: "flame", color: "volt" },
   { key: "core", name: "البطن والجذع", nameEn: "Core", icon: "target", color: "blue" },
 ];
@@ -87,7 +88,7 @@ const EXERCISES = [
     ["Rope attachment", "كوع عالي", "للصحة الكتفية"]],
   ["arms", "بايسبس بالبار", "Barbell Curl", 25, 42.5, 12, [8, 12],
     ["EZ bar", "Straight bar", "ثبات الكوع", "21s finisher"]],
-  ["arms", "ترايسبس كيبل", "Triceps Pushdown", 25, 47.5, 12, [8, 14],
+  ["triceps", "ترايسبس كيبل", "Triceps Pushdown", 25, 47.5, 12, [8, 14],
     ["Rope", "V-bar", "Overhead", "حرق ناري"]],
   ["arms", "هامر كيرل", "Hammer Curl", 16, 26, 10, [8, 12],
     ["Neutral grip", "Across body", "بطيء بالنزول"]],
@@ -108,7 +109,6 @@ function buildEntries(start, end, sessions, repRange, notes) {
   const spacing = 98 / sessions;
   let dayCursor = 98 - between(0, 2);
   let weight = start;
-  let maxSoFar = -Infinity;
   for (let i = 0; i < sessions; i++) {
     const progress = i / (sessions - 1);
     // base ramp + plateau/deload noise
@@ -117,20 +117,24 @@ function buildEntries(start, end, sessions, repRange, notes) {
     weight = Math.max(start, Math.round((ramp + noise) * 4) / 4); // quarter-plate precision
     const reps = intBetween(repRange[0], repRange[1]);
     const date = isoDaysAgo(Math.max(0, Math.round(dayCursor)));
-    const isPr = weight > maxSoFar;
-    if (weight > maxSoFar) maxSoFar = weight;
     entries.push({
       id: crypto.randomUUID(),
       weightKg: weight,
       reps,
       note: rand() < 0.45 ? pick(notes) : null,
       performedAt: date,
-      isPr,
+      isPr: false, // set below — TRUE PR semantics applied after all weights exist
       createdAt: new Date(date + "T19:00:00Z"),
     });
     dayCursor -= spacing * between(0.8, 1.2);
   }
   entries.sort((a, b) => a.performedAt.localeCompare(b.performedAt));
+
+  // TRUE PR semantics: flag exclusively entries sitting at the ALL-TIME MAX
+  // weight for this exercise. Everything below the ceiling is not a PR.
+  const allTimeMax = Math.max(...entries.map((e) => e.weightKg));
+  for (const e of entries) e.isPr = e.weightKg === allTimeMax;
+
   return entries;
 }
 

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Dumbbell, Filter, Trophy } from "lucide-react";
-import { formatDayAr, formatWeight, toArabicDigits } from "@/lib/format";
+import { formatCount, formatDayAr, formatWeight } from "@/lib/format";
 import { and } from "@/lib/classnames";
 
 interface HistoryEntry {
@@ -68,7 +68,7 @@ export default function HistoryList({
         <section key={date} className="stagger space-y-2">
           <h2 className="sticky top-3 z-20 w-fit rounded-full border border-iron-700 bg-iron-900/95 px-4 py-1.5 text-[11px] font-black text-slate-300 backdrop-blur">
             {formatDayAr(date)}
-            <span className="ms-2 text-slate-600">{toArabicDigits(list.length)} تمرين</span>
+            <span className="ms-2 text-slate-600">{formatCount(list.length)} تمرين</span>
           </h2>
           {list.map((e) => (
             <Link
@@ -112,7 +112,7 @@ export default function HistoryList({
                   <span className="text-[9px] text-slate-500"> كجم</span>
                 </span>
                 <span className="block text-[9px] font-bold text-ice-300">
-                  {toArabicDigits(e.reps)} تكرار
+                  {formatCount(e.reps)} تكرار
                 </span>
               </span>
             </Link>

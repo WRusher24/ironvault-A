@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     );
   }
   if (file.size > MAX_BYTES) {
-    return NextResponse.json({ error: "حجم الصورة يتجاوز ٥ ميغابايت" }, { status: 400 });
+    return NextResponse.json({ error: "حجم الصورة يتجاوز 5 ميغابايت" }, { status: 400 });
   }
 
   const ext = file.type.split("/")[1]?.replace("jpeg", "jpg") ?? "jpg";

@@ -32,8 +32,8 @@ After login you land on your dashboard:
   back to the iron.
 - **Search bar** — type any part of a name (Arabic or English) to filter exercises
   across every category instantly.
-- **Muscle-group grid** — card per category (الصدر، الظهر، الأكتاف، الأذرع، الأرجل،
-  plus your custom ones). Tap a card to expand its exercises.
+- **Muscle-group grid** — card per category (الصدر، الظهر، الأكتاف، الأذرع، الترايسبس،
+  الأرجل، البطن والجذع — plus your custom ones). Tap a card to expand its exercises.
 
 ## 3. Logging a PR (the 10-second flow)
 

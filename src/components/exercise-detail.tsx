@@ -21,7 +21,7 @@ import {
   formatDateAr,
   formatWeight,
   sinceLabelAr,
-  toArabicDigits,
+  formatCount,
 } from "@/lib/format";
 import ProgressChart from "@/components/progress-chart";
 import EntrySheet, { type EntryEditable } from "@/components/entry-sheet";
@@ -207,14 +207,14 @@ export default function ExerciseDetail({ exercise, entries, stats, categories }:
         <div className="glass-card rounded-2xl p-3.5 text-center">
           <Medal className="mx-auto h-4.5 w-4.5 text-amber-400" />
           <p className="tabular mt-1.5 text-xl font-black text-white">
-            {toArabicDigits(stats.prCount)}
+            {formatCount(stats.prCount)}
           </p>
           <p className="text-[10px] font-bold text-slate-500">مرات تحطيم الرقم</p>
         </div>
         <div className="glass-card rounded-2xl p-3.5 text-center">
           <TrendingUp className="mx-auto h-4.5 w-4.5 text-ice-300" />
           <p className="tabular mt-1.5 text-xl font-black text-white">
-            {toArabicDigits(stats.entryCount)}
+            {formatCount(stats.entryCount)}
           </p>
           <p className="text-[10px] font-bold text-slate-500">إجمالي السجلات</p>
         </div>
@@ -295,7 +295,7 @@ export default function ExerciseDetail({ exercise, entries, stats, categories }:
                 <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] font-semibold text-slate-400">
                   <span className="flex items-center gap-1">
                     <Repeat className="h-3 w-3" />
-                    {toArabicDigits(e.reps)} تكرار
+                    {formatCount(e.reps)} تكرار
                   </span>
                   {e.note && (
                     <span className="flex items-center gap-1 truncate">
@@ -362,7 +362,7 @@ export default function ExerciseDetail({ exercise, entries, stats, categories }:
             <Trash2 className="mx-auto h-8 w-8 text-rose-400" />
             <h3 className="mt-3 text-lg font-black text-white">حذف التمرين بالكامل؟</h3>
             <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
-              سيتم حذف «{exercise.name}» مع كل سجلاته ({toArabicDigits(stats.entryCount)}) نهائيًا.
+              سيتم حذف «{exercise.name}» مع كل سجلاته ({formatCount(stats.entryCount)}) نهائيًا.
               لا يمكن التراجع عن هذا الإجراء.
             </p>
             {error && <p className="mt-3 text-sm font-bold text-rose-300">{error}</p>}
