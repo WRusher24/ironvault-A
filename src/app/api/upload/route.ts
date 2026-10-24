@@ -23,16 +23,16 @@ export async function POST(req: NextRequest) {
   const form = await req.formData().catch(() => null);
   const file = form?.get("file");
   if (!file || !(file instanceof File)) {
-    return NextResponse.json({ error: "لم يتم إرفاق أي ملف" }, { status: 400 });
+    return NextResponse.json({ error: "No file attached" }, { status: 400 });
   }
   if (!ALLOWED.has(file.type)) {
     return NextResponse.json(
-      { error: "الصيغة غير مدعومة — استخدم JPG أو PNG أو WebP" },
+      { error: "Unsupported format — use JPG, PNG, or WebP" },
       { status: 400 },
     );
   }
   if (file.size > MAX_BYTES) {
-    return NextResponse.json({ error: "حجم الصورة يتجاوز 5 ميغابايت" }, { status: 400 });
+    return NextResponse.json({ error: "Image exceeds 5 MB" }, { status: 400 });
   }
 
   const ext = file.type.split("/")[1]?.replace("jpeg", "jpg") ?? "jpg";

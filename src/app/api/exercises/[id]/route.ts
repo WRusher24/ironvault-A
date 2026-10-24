@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ id: string }> };
 
 const patchSchema = z.object({
-  name: z.string().trim().min(1, "أدخل اسم التمرين").max(160).optional(),
+  name: z.string().trim().min(1, "Enter exercise name").max(160).optional(),
   nameEn: z.string().trim().max(160).nullable().optional(),
   categoryId: z.string().uuid().optional(),
   imageUrl: z.string().max(500).nullable().optional(),
@@ -36,7 +36,7 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
     .limit(1);
   const row = rows[0];
   if (!row) {
-    return NextResponse.json({ error: "التمرين غير موجود" }, { status: 404 });
+    return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
   }
 
   const entries = await db
@@ -73,7 +73,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   const parsed = patchSchema.safeParse(await req.json());
   if (!parsed.success) {
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "بيانات غير صالحة" },
+      { error: parsed.error.issues[0]?.message ?? "Invalid data" },
       { status: 400 },
     );
   }
@@ -89,7 +89,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
       )
       .limit(1);
     if (!cat) {
-      return NextResponse.json({ error: "الفئة المحددة غير موجودة" }, { status: 400 });
+      return NextResponse.json({ error: "Category not found" }, { status: 400 });
     }
   }
   const [updated] = await db
@@ -103,7 +103,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
     .where(and(eq(exercises.id, id), eq(exercises.userId, user.id)))
     .returning();
   if (!updated) {
-    return NextResponse.json({ error: "التمرين غير موجود" }, { status: 404 });
+    return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
   }
   return NextResponse.json({ exercise: updated });
 }
@@ -117,7 +117,7 @@ export async function DELETE(_req: NextRequest, ctx: Ctx) {
     .where(and(eq(exercises.id, id), eq(exercises.userId, user.id)))
     .returning({ id: exercises.id });
   if (!deleted) {
-    return NextResponse.json({ error: "التمرين غير موجود" }, { status: 404 });
+    return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
   }
   return NextResponse.json({ ok: true });
 }

@@ -14,7 +14,7 @@ import {
 import { relations } from "drizzle-orm";
 
 /**
- * IronVault — آيرون فالت
+ * IronVault — PR tracking platform
  * Every domain table carries a `userId` foreign key so each account operates
  * inside a 100% isolated data container. All queries MUST filter by userId.
  */

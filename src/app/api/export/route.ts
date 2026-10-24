@@ -33,7 +33,7 @@ export async function GET() {
 
   // Bilingual headers keep the CSV useful in both Arabic and English tooling.
   const csv = buildCsv(
-    ["التاريخ / Date", "الفئة / Category", "التمرين / Exercise", "Exercise (EN)", "الوزن (كجم) / Weight (kg)", "التكرارات / Reps", "ملاحظة / Note", "رقم قياسي / PR"],
+    ["Date", "Category", "Exercise", "Exercise (EN)", "Weight (kg)", "Reps", "Note", "PR"],
     rows.map((r) => [
       r.date,
       r.category,

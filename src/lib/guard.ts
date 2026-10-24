@@ -13,7 +13,7 @@ export async function requireUser(): Promise<
   if (!user) {
     return {
       response: NextResponse.json(
-        { error: "يجب تسجيل الدخول أولًا" },
+        { error: "Please log in first" },
         { status: 401 },
       ),
     };

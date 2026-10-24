@@ -11,7 +11,7 @@ import { exercises, prEntries } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth";
 import { formatCount } from "@/lib/format";
 
-export const metadata: Metadata = { title: "تصدير البيانات" };
+export const metadata: Metadata = { title: "Export Data" };
 export const dynamic = "force-dynamic";
 
 export default async function ExportPage() {
@@ -33,82 +33,83 @@ export default async function ExportPage() {
   return (
     <main className="stagger space-y-5 px-4 pt-6">
       <header>
-        <h1 className="text-2xl font-black text-white">تصدير بياناتك</h1>
-        <p className="mt-1 text-xs font-semibold text-slate-500">
-          بياناتك ملكك — حمّلها بصيغة CSV متى ما شئت.
+        <h1 className="text-2xl font-black" style={{ color: "var(--color-text)" }}>Export Your Data</h1>
+        <p className="mt-1 text-xs font-semibold" style={{ color: "var(--color-text-faint)" }}>
+          Your data is yours — download it as a CSV whenever you want.
         </p>
       </header>
 
-      <div className="glass-card relative overflow-hidden rounded-3xl p-6">
-        <div className="absolute -end-10 -top-10 h-40 w-40 rounded-full bg-volt-500/10 blur-3xl" />
+      <div className="clean-card relative overflow-hidden rounded-3xl p-6">
+        <div className="absolute -end-10 -top-10 h-40 w-40 rounded-full blur-3xl" style={{ background: "var(--color-accent-soft)" }} />
         <div className="flex items-center gap-4">
-          <div className="volt-glow flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-volt-500 to-ice-500">
-            <FileSpreadsheet className="h-8 w-8 text-iron-950" strokeWidth={2.2} />
+          <div className="coral-glow flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl" style={{ background: "var(--color-accent)" }}>
+            <FileSpreadsheet className="h-8 w-8 text-white" strokeWidth={2.2} />
           </div>
           <div>
-            <h2 className="text-lg font-black text-white">ملف CSV شامل</h2>
-            <p className="mt-0.5 text-xs leading-relaxed text-slate-400">
-              يشمل كل تمارينك وسجلاتك: التاريخ، الفئة، التمرين، الوزن، التكرارات،
-              الملاحظات، وشارات PR.
+            <h2 className="text-lg font-black" style={{ color: "var(--color-text)" }}>Full CSV File</h2>
+            <p className="mt-0.5 text-xs leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
+              Includes all your exercises and entries: date, category, exercise, weight, reps,
+              notes, and PR markers.
             </p>
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-3 gap-2.5 border-t border-iron-700 pt-5 text-center">
+        <div className="mt-5 grid grid-cols-3 gap-2.5 border-t pt-5 text-center" style={{ borderColor: "var(--color-card-border)" }}>
           <div>
-            <p className="tabular text-xl font-black text-white">{formatCount(stats?.entries ?? 0)}</p>
-            <p className="text-[10px] font-bold text-slate-500">سجل تدريبي</p>
+            <p className="tabular text-xl font-black" style={{ color: "var(--color-text)" }}>{formatCount(stats?.entries ?? 0)}</p>
+            <p className="text-[10px] font-bold" style={{ color: "var(--color-text-faint)" }}>Training entries</p>
           </div>
           <div>
-            <p className="tabular text-xl font-black text-volt-400">{formatCount(stats?.prs ?? 0)}</p>
-            <p className="text-[10px] font-bold text-slate-500">رقم قياسي</p>
+            <p className="tabular text-xl font-black" style={{ color: "var(--color-accent)" }}>{formatCount(stats?.prs ?? 0)}</p>
+            <p className="text-[10px] font-bold" style={{ color: "var(--color-text-faint)" }}>PRs</p>
           </div>
           <div>
-            <p className="tabular text-xl font-black text-ice-300">{formatCount(exCount?.count ?? 0)}</p>
-            <p className="text-[10px] font-bold text-slate-500">تمرين</p>
+            <p className="tabular text-xl font-black text-teal-600">{formatCount(exCount?.count ?? 0)}</p>
+            <p className="text-[10px] font-bold" style={{ color: "var(--color-text-faint)" }}>Exercises</p>
           </div>
         </div>
 
         <a
           href="/api/export"
           download
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-volt-500 to-volt-600 py-4 text-sm font-black text-iron-950 shadow-[0_10px_35px_-10px_rgba(34,197,94,0.6)] transition-all hover:brightness-110 active:scale-[0.98]"
+          className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-sm font-black text-white shadow-lg transition-all hover:opacity-90 active:scale-[0.98]"
+          style={{ background: "var(--color-accent)" }}
         >
           <Download className="h-5 w-5" />
-          تحميل ملف CSV الآن
+          Download CSV now
         </a>
       </div>
 
-      <div className="glass-card space-y-3 rounded-3xl p-5">
-        <h3 className="flex items-center gap-2 text-sm font-black text-white">
-          <Table2 className="h-4.5 w-4.5 text-ice-300" />
-          ماذا يوجد داخل الملف؟
+      <div className="clean-card space-y-3 rounded-3xl p-5">
+        <h3 className="flex items-center gap-2 text-sm font-black" style={{ color: "var(--color-text)" }}>
+          <Table2 className="h-4.5 w-4.5 text-teal-600" />
+          What&apos;s inside the file?
         </h3>
-        <ul className="space-y-2 text-xs font-semibold leading-relaxed text-slate-400">
+        <ul className="space-y-2 text-xs font-semibold leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
           <li className="flex gap-2">
-            <span className="text-volt-400">•</span>
-            أعمدة ثنائية اللغة (العربية / English) مرتبة زمنيًا لكل تمرين.
+            <span style={{ color: "var(--color-accent)" }}>•</span>
+            Bilingual columns (English/Arabic) arranged chronologically per exercise.
           </li>
           <li className="flex gap-2">
-            <span className="text-volt-400">•</span>
-            الأوزان بالكيلوغرام تمامًا كما سجلتها — بدون أي تحويل.
+            <span style={{ color: "var(--color-accent)" }}>•</span>
+            Weights in kilograms exactly as you logged them — no conversion.
           </li>
           <li className="flex gap-2">
-            <span className="text-volt-400">•</span>
-            عمود «PR» يعلّم كل سجل حطّم رقمًا قياسيًا عند تسجيله.
+            <span style={{ color: "var(--color-accent)" }}>•</span>
+            A &ldquo;PR&rdquo; column marking every entry that broke a personal record.
           </li>
           <li className="flex gap-2">
-            <span className="text-volt-400">•</span>
-            يفتح مباشرة في Excel وGoogle Sheets مع دعم كامل للعربية (UTF-8).
+            <span style={{ color: "var(--color-accent)" }}>•</span>
+            Opens directly in Excel and Google Sheets with full UTF-8 support.
           </li>
         </ul>
       </div>
 
-      <div className="flex items-start gap-3 rounded-3xl border border-iron-700/70 bg-iron-850/60 p-5">
-        <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-volt-400" />
-        <p className="text-xs font-semibold leading-relaxed text-slate-400">
-          التصدير يتم من خادم آمن وبعد التحقق من هويتك — لا يمكن لأي مستخدم آخر
-          الوصول إلى بياناتك أو تنزيلها.
+      <div className="flex items-start gap-3 rounded-3xl border p-5" style={{ borderColor: "var(--color-card-border)", background: "var(--color-card)" }}>
+        <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" style={{ color: "var(--color-accent)" }} />
+        <p className="text-xs font-semibold leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
+          Export happens on a secure server after verifying your identity — no other user can
+          access or download your data.
         </p>
       </div>
     </main>

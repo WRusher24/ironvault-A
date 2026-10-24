@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Trophy, Zap } from "lucide-react";
 import { formatWeight } from "@/lib/format";
 
-const CONFETTI_COLORS = ["#22c55e", "#22d3ee", "#a3e635", "#f59e0b", "#ffffff", "#86efac"];
+const CONFETTI_COLORS = ["#F95C4B", "#f59e0b", "#fb7185", "#60a5fa", "#2dd4bf", "#000000"];
 
 interface Props {
   show: boolean;
@@ -13,7 +13,7 @@ interface Props {
   onDone: () => void;
 }
 
-/** Satisfying neon confetti burst + "NEW PR!" card when a record is smashed. */
+/** Satisfying confetti burst + "NEW PR!" card when a record is smashed. */
 export default function Celebration({ show, weight, previousBest, onDone }: Props) {
   const [visible, setVisible] = useState(false);
 
@@ -49,7 +49,7 @@ export default function Celebration({ show, weight, previousBest, onDone }: Prop
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[70] overflow-hidden">
-      <div className="anim-overlay-in absolute inset-0 bg-iron-950/85 backdrop-blur-sm" />
+      <div className="anim-overlay-in absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
       {/* Confetti rain */}
       {pieces.map((p) => (
@@ -62,7 +62,6 @@ export default function Celebration({ show, weight, previousBest, onDone }: Prop
             height: p.round ? p.size : p.size * 0.45,
             background: p.color,
             borderRadius: p.round ? "50%" : 2,
-            boxShadow: `0 0 10px ${p.color}`,
             animation: `iv-confetti ${p.duration}s cubic-bezier(0.25,0.4,0.45,1) ${p.delay}s both`,
             ["--drift" as string]: `${p.drift}px`,
             ["--spin" as string]: `${p.spin}deg`,
@@ -72,29 +71,29 @@ export default function Celebration({ show, weight, previousBest, onDone }: Prop
 
       {/* Hero card */}
       <div className="absolute inset-0 flex items-center justify-center px-6">
-        <div className="anim-pop relative w-full max-w-xs rounded-3xl border border-volt-500/50 bg-gradient-to-b from-iron-800 to-iron-900 p-7 text-center shadow-[0_0_80px_-12px_rgba(34,197,94,0.65)]">
+        <div className="anim-pop relative w-full max-w-xs rounded-3xl border p-7 text-center shadow-2xl" style={{ borderColor: "var(--color-accent)", background: "var(--color-card)" }}>
           <div className="absolute -top-8 left-1/2 -translate-x-1/2">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-volt-400 to-volt-600 shadow-[0_0_40px_rgba(34,197,94,0.8)]">
-              <Trophy className="h-8 w-8 text-iron-950" strokeWidth={2.2} />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full shadow-lg" style={{ background: "var(--color-accent)" }}>
+              <Trophy className="h-8 w-8 text-white" strokeWidth={2.2} />
             </div>
           </div>
-          <p className="mt-9 text-[11px] font-black uppercase tracking-[0.3em] text-volt-400">
+          <p className="mt-9 text-[11px] font-black uppercase tracking-[0.3em]" style={{ color: "var(--color-accent)" }}>
             NEW PR
           </p>
-          <h3 className="mt-1 text-2xl font-black text-white">رقم قياسي جديد!</h3>
-          <div className="tabular mt-3 text-6xl font-black text-volt-400 drop-shadow-[0_0_24px_rgba(34,197,94,0.6)]">
+          <h3 className="mt-1 text-2xl font-black" style={{ color: "var(--color-text)" }}>New Personal Record!</h3>
+          <div className="tabular mt-3 text-6xl font-black" style={{ color: "var(--color-accent)" }}>
             {formatWeight(weight)}
-            <span className="me-1 text-xl text-slate-400"> كجم</span>
+            <span className="me-1 text-xl" style={{ color: "var(--color-text-muted)" }}> kg</span>
           </div>
           {gain !== null && gain > 0 && (
-            <p className="mt-2 flex items-center justify-center gap-1.5 text-sm font-bold text-ice-300">
+            <p className="mt-2 flex items-center justify-center gap-1.5 text-sm font-bold text-teal-600">
               <Zap className="h-4 w-4" />
-              <span className="tabular">+{formatWeight(gain)} كجم</span>
-              فوق رقمك السابق
+              <span className="tabular">+{formatWeight(gain)} kg</span>
+              above your previous best
             </p>
           )}
-          <p className="mt-4 text-xs font-semibold leading-relaxed text-slate-400">
-            الحديد لا يكذب — وأنت للتو أثبتّ أنك أقوى من الأمس.
+          <p className="mt-4 text-xs font-semibold leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
+            Iron never lies — and you just proved you&apos;re stronger than yesterday.
           </p>
         </div>
       </div>

@@ -9,7 +9,7 @@ import { CATEGORY_COLOR_KEYS, CATEGORY_ICON_KEYS } from "@/lib/categories";
 export const dynamic = "force-dynamic";
 
 const patchSchema = z.object({
-  name: z.string().trim().min(1, "أدخل اسم الفئة").max(120).optional(),
+  name: z.string().trim().min(1, "Enter category name").max(120).optional(),
   nameEn: z.string().trim().max(120).nullable().optional(),
   icon: z.string().refine((v) => CATEGORY_ICON_KEYS.includes(v)).optional(),
   color: z.string().refine((v) => CATEGORY_COLOR_KEYS.includes(v)).optional(),
@@ -24,7 +24,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   const parsed = patchSchema.safeParse(await req.json());
   if (!parsed.success) {
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "بيانات غير صالحة" },
+      { error: parsed.error.issues[0]?.message ?? "Invalid data" },
       { status: 400 },
     );
   }
@@ -40,7 +40,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
     .where(and(eq(categories.id, id), eq(categories.userId, user.id)))
     .returning();
   if (!updated) {
-    return NextResponse.json({ error: "الفئة غير موجودة" }, { status: 404 });
+    return NextResponse.json({ error: "Category not found" }, { status: 404 });
   }
   return NextResponse.json({ category: updated });
 }
@@ -55,7 +55,7 @@ export async function DELETE(_req: NextRequest, ctx: Ctx) {
     .where(and(eq(categories.id, id), eq(categories.userId, user.id)))
     .returning({ id: categories.id });
   if (!deleted) {
-    return NextResponse.json({ error: "الفئة غير موجودة" }, { status: 404 });
+    return NextResponse.json({ error: "Category not found" }, { status: 404 });
   }
   return NextResponse.json({ ok: true });
 }

@@ -44,7 +44,7 @@ export default function CategoryManager({
   const [name, setName] = useState("");
   const [nameEn, setNameEn] = useState("");
   const [icon, setIcon] = useState("dumbbell");
-  const [color, setColor] = useState("volt");
+  const [color, setColor] = useState("coral");
 
   function openEditor(cat: Cat | "new") {
     setEditing(cat);
@@ -52,7 +52,7 @@ export default function CategoryManager({
       setName("");
       setNameEn("");
       setIcon("dumbbell");
-      setColor("volt");
+      setColor("coral");
     } else {
       setName(cat.name);
       setNameEn(cat.nameEn ?? "");
@@ -64,7 +64,7 @@ export default function CategoryManager({
 
   async function save() {
     if (!name.trim()) {
-      setError("أدخل اسم الفئة");
+      setError("Enter a category name");
       return;
     }
     setBusy(true);
@@ -86,7 +86,7 @@ export default function CategoryManager({
       setEditing(null);
       router.refresh();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "تعذر الحفظ");
+      setError(err instanceof ApiError ? err.message : "Save failed");
     } finally {
       setBusy(false);
     }
@@ -100,7 +100,7 @@ export default function CategoryManager({
       setDeleting(null);
       router.refresh();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "تعذر الحذف");
+      setError(err instanceof ApiError ? err.message : "Delete failed");
     } finally {
       setBusy(false);
     }
@@ -109,13 +109,14 @@ export default function CategoryManager({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-black text-white">إدارة الفئات</h2>
+        <h2 className="text-sm font-black" style={{ color: "var(--color-text)" }}>Manage Categories</h2>
         <button
           onClick={() => openEditor("new")}
-          className="flex items-center gap-1.5 rounded-full border border-volt-500/40 bg-volt-500/10 px-3.5 py-1.5 text-xs font-black text-volt-400 transition-all active:scale-95"
+          className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-black transition-all active:scale-95"
+          style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)", color: "var(--color-accent-text)" }}
         >
           <Plus className="h-3.5 w-3.5" />
-          فئة جديدة
+          New Category
         </button>
       </div>
 
@@ -124,7 +125,7 @@ export default function CategoryManager({
           const Icon = categoryIcon(cat.icon);
           const col = categoryColor(cat.color);
           return (
-            <div key={cat.id} className="glass-card flex items-center gap-3 rounded-2xl p-3.5">
+            <div key={cat.id} className="clean-card flex items-center gap-3 rounded-2xl p-3.5">
               <span
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
                 style={{ background: col.soft, color: col.hex }}
@@ -132,22 +133,24 @@ export default function CategoryManager({
                 <Icon className="h-5 w-5" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-black text-white">{cat.name}</span>
+                <span className="block truncate text-sm font-black" style={{ color: "var(--color-text)" }}>{cat.name}</span>
                 {cat.nameEn && (
-                  <span className="block text-[11px] font-semibold text-slate-500">{cat.nameEn}</span>
+                  <span className="block text-[11px] font-semibold" style={{ color: "var(--color-text-faint)" }}>{cat.nameEn}</span>
                 )}
               </span>
               <button
                 onClick={() => openEditor(cat)}
-                aria-label={`تعديل ${cat.name}`}
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-iron-600 bg-iron-800 text-slate-400 transition-colors hover:text-white"
+                aria-label={`Edit ${cat.name}`}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border transition-colors"
+                style={{ borderColor: "var(--color-card-border)", background: "var(--color-card)", color: "var(--color-text-muted)" }}
               >
                 <Pencil className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setDeleting(cat)}
-                aria-label={`حذف ${cat.name}`}
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-300/80 transition-colors hover:text-rose-200"
+                aria-label={`Delete ${cat.name}`}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border transition-colors"
+                style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)", color: "var(--color-accent-text)" }}
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -158,28 +161,28 @@ export default function CategoryManager({
 
       {/* Editor sheet */}
       {editing && (
-        <div className="anim-pop space-y-4 rounded-3xl border border-volt-500/30 bg-iron-850 p-5">
+        <div className="anim-pop space-y-4 rounded-3xl border p-5" style={{ borderColor: "var(--color-accent)", background: "var(--color-card)" }}>
           <div className="flex items-center justify-between">
-            <h3 className="flex items-center gap-2 text-sm font-black text-white">
-              <FolderPlus className="h-4.5 w-4.5 text-volt-400" />
-              {editing === "new" ? "فئة مخصصة جديدة" : `تعديل «${editing.name}»`}
+            <h3 className="flex items-center gap-2 text-sm font-black" style={{ color: "var(--color-text)" }}>
+              <FolderPlus className="h-4.5 w-4.5" style={{ color: "var(--color-accent)" }} />
+              {editing === "new" ? "New custom category" : `Edit "${editing.name}"`}
             </h3>
-            <button onClick={() => setEditing(null)} aria-label="إغلاق" className="text-slate-500 hover:text-white">
+            <button onClick={() => setEditing(null)} aria-label="Close" style={{ color: "var(--color-text-faint)" }}>
               <X className="h-4.5 w-4.5" />
             </button>
           </div>
 
           <div>
-            <FieldLabel>اسم الفئة بالعربية</FieldLabel>
+            <FieldLabel>Category name</FieldLabel>
             <TextInput
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="مثال: الساعد الأمامي"
+              placeholder="e.g. Forearms"
               maxLength={120}
             />
           </div>
           <div>
-            <FieldLabel>الاسم الإنجليزي (اختياري)</FieldLabel>
+            <FieldLabel>English name (optional)</FieldLabel>
             <TextInput
               value={nameEn}
               onChange={(e) => setNameEn(e.target.value)}
@@ -191,7 +194,7 @@ export default function CategoryManager({
           </div>
 
           <div>
-            <FieldLabel>الأيقونة</FieldLabel>
+            <FieldLabel>Icon</FieldLabel>
             <div className="flex flex-wrap gap-2">
               {CATEGORY_ICON_KEYS.map((k) => {
                 const Icon = categoryIcon(k);
@@ -202,11 +205,12 @@ export default function CategoryManager({
                     type="button"
                     onClick={() => setIcon(k)}
                     aria-label={k}
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all active:scale-90 ${
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border transition-all active:scale-90"
+                    style={
                       active
-                        ? "border-volt-500 bg-volt-500/15 text-volt-400"
-                        : "border-iron-600 bg-iron-800 text-slate-500 hover:text-slate-300"
-                    }`}
+                        ? { borderColor: "var(--color-accent)", background: "var(--color-accent-soft)", color: "var(--color-accent)" }
+                        : { borderColor: "var(--color-card-border)", background: "var(--color-card)", color: "var(--color-text-faint)" }
+                    }
                   >
                     <Icon className="h-4.5 w-4.5" />
                   </button>
@@ -216,7 +220,7 @@ export default function CategoryManager({
           </div>
 
           <div>
-            <FieldLabel>اللون</FieldLabel>
+            <FieldLabel>Color</FieldLabel>
             <div className="flex flex-wrap gap-2">
               {CATEGORY_COLOR_KEYS.map((k) => {
                 const c = categoryColor(k);
@@ -235,7 +239,7 @@ export default function CategoryManager({
                     }}
                   >
                     <span className="h-4 w-4 rounded-full" style={{ background: c.hex }}>
-                      {active && <Check className="h-4 w-4 text-iron-950" strokeWidth={3.5} />}
+                      {active && <Check className="h-4 w-4 text-white" strokeWidth={3.5} />}
                     </span>
                   </button>
                 );
@@ -243,40 +247,43 @@ export default function CategoryManager({
             </div>
           </div>
 
-          {error && <p className="text-sm font-bold text-rose-300">{error}</p>}
+          {error && <p className="text-sm font-bold" style={{ color: "var(--color-accent)" }}>{error}</p>}
 
           <button
             onClick={() => void save()}
             disabled={busy}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-l from-volt-500 to-volt-600 py-3 text-sm font-black text-iron-950 transition-all active:scale-[0.98] disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-black text-white transition-all active:scale-[0.98] disabled:opacity-50"
+            style={{ background: "var(--color-accent)" }}
           >
             <Check className="h-4.5 w-4.5" />
-            {busy ? "جارٍ الحفظ..." : editing === "new" ? "إنشاء الفئة" : "حفظ التعديلات"}
+            {busy ? "Saving..." : editing === "new" ? "Create category" : "Save changes"}
           </button>
         </div>
       )}
 
       {/* Delete confirm */}
       {deleting && (
-        <div className="anim-pop space-y-3 rounded-3xl border border-rose-500/40 bg-rose-500/5 p-5">
-          <p className="flex items-start gap-2 text-sm font-bold leading-relaxed text-rose-200">
+        <div className="anim-pop space-y-3 rounded-3xl border p-5" style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)" }}>
+          <p className="flex items-start gap-2 text-sm font-bold leading-relaxed" style={{ color: "var(--color-accent-text)" }}>
             <TriangleAlert className="mt-0.5 h-4.5 w-4.5 shrink-0" />
-            حذف «{deleting.name}» نهائيًا؟ سيتم حذف كل تمارين الفئة وسجلاتها معها —
-            لا يمكن التراجع.
+            Permanently delete &ldquo;{deleting.name}&rdquo;? All exercises and their logs in this category will also be deleted —
+            this cannot be undone.
           </p>
           <div className="flex gap-2">
             <button
               onClick={() => void remove(deleting)}
               disabled={busy}
-              className="flex-1 rounded-xl bg-rose-500 py-2.5 text-xs font-black text-white transition-all hover:bg-rose-400 active:scale-[0.98] disabled:opacity-50"
+              className="flex-1 rounded-xl py-2.5 text-xs font-black text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+              style={{ background: "var(--color-accent)" }}
             >
-              {busy ? "جارٍ الحذف..." : "نعم، احذف الفئة"}
+              {busy ? "Deleting..." : "Yes, delete category"}
             </button>
             <button
               onClick={() => setDeleting(null)}
-              className="flex-1 rounded-xl border border-iron-600 bg-iron-800 py-2.5 text-xs font-bold text-slate-300"
+              className="flex-1 rounded-xl border py-2.5 text-xs font-bold"
+              style={{ borderColor: "var(--color-card-border)", background: "var(--color-card)", color: "var(--color-text-muted)" }}
             >
-              تراجع
+              Cancel
             </button>
           </div>
         </div>

@@ -1,26 +1,27 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Cairo } from "next/font/google";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-const cairo = Cairo({
-  subsets: ["arabic", "latin"],
-  variable: "--font-cairo",
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "آيرون فالت — IronVault | خزنة أرقامك القياسية",
-    template: "%s | آيرون فالت",
+    default: "IronVault — Your PR Vault",
+    template: "%s | IronVault",
   },
   description:
-    "منصة تتبع الحمل التدريجي والأرقام القياسية في صالة الحديد — سجّل أوزانك، تابع تقدمك، واحتفل بأرقامك القياسية.",
+    "Track progressive overload and personal records in the gym — log your weights, follow your progress, and celebrate your PRs.",
   applicationName: "IronVault",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f172a",
+  themeColor: "#F6F4F1",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -28,9 +29,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={cairo.variable}>
-      <body className="iron-backdrop min-h-dvh antialiased">
-        <div className="iron-grid min-h-dvh">{children}</div>
+    <html lang="en" dir="ltr" className={inter.variable}>
+      <body className="paper-backdrop min-h-dvh antialiased">
+        <ThemeProvider>
+          <div className="paper-grid min-h-dvh">{children}</div>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -17,7 +17,7 @@ export async function api<T = unknown>(
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   if (!res.ok) {
     const message =
-      typeof data.error === "string" ? data.error : "حدث خطأ غير متوقع، حاول مجددًا.";
+      typeof data.error === "string" ? data.error : "Unexpected error, please try again.";
     throw new ApiError(message, res.status);
   }
   return data as T;

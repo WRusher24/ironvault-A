@@ -9,7 +9,7 @@ import {
   Sparkles,
   Trophy,
 } from "lucide-react";
-import { formatCount, formatWeight, greetingAr, sinceLabelAr } from "@/lib/format";
+import { formatCount, formatWeight, greetingEn, sinceLabelEn } from "@/lib/format";
 
 interface Featured {
   id: string;
@@ -66,52 +66,52 @@ export default function StatsHeader({
       {/* Greeting */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs font-bold text-slate-500">
-            {greetingAr()}
+          <p className="text-xs font-bold" style={{ color: "var(--color-text-faint)" }}>
+            {greetingEn()}
           </p>
-          <h1 className="mt-0.5 text-2xl font-black text-white">
-            {firstName} <span className="text-volt-400">·</span>{" "}
-            <span className="text-lg font-extrabold text-slate-300">خزنتك جاهزة</span>
+          <h1 className="mt-0.5 text-2xl font-black" style={{ color: "var(--color-text)" }}>
+            {firstName} <span style={{ color: "var(--color-accent)" }}>·</span>{" "}
+            <span className="text-lg font-extrabold" style={{ color: "var(--color-text-muted)" }}>Your vault is ready</span>
           </h1>
         </div>
-        <div className="volt-glow flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-volt-500 to-ice-500">
-          <Dumbbell className="h-6 w-6 text-iron-950" strokeWidth={2.4} />
+        <div className="coral-glow flex h-12 w-12 items-center justify-center rounded-2xl" style={{ background: "var(--color-accent)" }}>
+          <Dumbbell className="h-6 w-6 text-white" strokeWidth={2.4} />
         </div>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-2.5">
-        <div className="glass-card rounded-2xl p-3.5">
-          <div className="flex items-center gap-1.5 text-volt-400">
+        <div className="clean-card rounded-2xl p-3.5">
+          <div className="flex items-center gap-1.5" style={{ color: "var(--color-accent)" }}>
             <Trophy className="h-4 w-4" />
-            <span className="text-[10px] font-black text-slate-400">أرقام قياسية</span>
+            <span className="text-[10px] font-black" style={{ color: "var(--color-text-muted)" }}>PRs</span>
           </div>
-          <p className="tabular mt-1.5 text-2xl font-black text-white">{formatCount(prs)}</p>
-          <p className="text-[10px] font-semibold text-slate-500">رقم محطَّم</p>
+          <p className="tabular mt-1.5 text-2xl font-black" style={{ color: "var(--color-text)" }}>{formatCount(prs)}</p>
+          <p className="text-[10px] font-semibold" style={{ color: "var(--color-text-faint)" }}>Records broken</p>
         </div>
 
-        <div className="glass-card rounded-2xl p-3.5">
-          <div className="flex items-center gap-1.5 text-ice-300">
+        <div className="clean-card rounded-2xl p-3.5">
+          <div className="flex items-center gap-1.5 text-amber-500">
             <Flame className="h-4 w-4" />
-            <span className="text-[10px] font-black text-slate-400">سلسلة النشاط</span>
+            <span className="text-[10px] font-black" style={{ color: "var(--color-text-muted)" }}>Streak</span>
           </div>
-          <p className="tabular mt-1.5 text-2xl font-black text-white">
+          <p className="tabular mt-1.5 text-2xl font-black" style={{ color: "var(--color-text)" }}>
             {formatCount(streakWeeks)}
-            <span className="text-xs font-bold text-slate-500"> أسبوع</span>
+            <span className="text-xs font-bold" style={{ color: "var(--color-text-faint)" }}> weeks</span>
           </p>
-          <p className={`text-[10px] font-bold ${trainedThisWeek ? "text-volt-400" : "text-slate-500"}`}>
-            {trainedThisWeek ? "نشط هذا الأسبوع" : "بانتظارك هذا الأسبوع"}
+          <p className="text-[10px] font-bold" style={{ color: trainedThisWeek ? "var(--color-accent)" : "var(--color-text-faint)" }}>
+            {trainedThisWeek ? "Active this week" : "Waiting for you"}
           </p>
         </div>
 
-        <div className="glass-card rounded-2xl p-3.5">
-          <div className="flex items-center gap-1.5 text-violet-300">
+        <div className="clean-card rounded-2xl p-3.5">
+          <div className="flex items-center gap-1.5 text-teal-600">
             <Sparkles className="h-4 w-4" />
-            <span className="text-[10px] font-black text-slate-400">سجلات</span>
+            <span className="text-[10px] font-black" style={{ color: "var(--color-text-muted)" }}>Entries</span>
           </div>
-          <p className="tabular mt-1.5 text-2xl font-black text-white">{formatCount(entries)}</p>
-          <p className="text-[10px] font-semibold text-slate-500">
-            {lastPrDate ? `آخر PR: ${sinceLabelAr(lastPrDate)}` : "سجل تدريبي"}
+          <p className="tabular mt-1.5 text-2xl font-black" style={{ color: "var(--color-text)" }}>{formatCount(entries)}</p>
+          <p className="text-[10px] font-semibold" style={{ color: "var(--color-text-faint)" }}>
+            {lastPrDate ? `Last PR: ${sinceLabelEn(lastPrDate)}` : "Training log"}
           </p>
         </div>
       </div>
@@ -120,37 +120,38 @@ export default function StatsHeader({
       {featured && featured.maxWeight !== null && (
         <Link
           href={`/exercise/${featured.id}`}
-          className="group relative block overflow-hidden rounded-2xl border border-volt-500/30 bg-gradient-to-l from-volt-500/12 via-iron-850 to-iron-850 p-4 transition-all hover:border-volt-500/60"
+          className="group relative block overflow-hidden rounded-2xl border p-4 transition-all"
+          style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)" }}
         >
-          <div className="absolute -end-6 -top-6 h-24 w-24 rounded-full bg-volt-500/15 blur-2xl transition-all group-hover:bg-volt-500/25" />
+          <div className="absolute -end-6 -top-6 h-24 w-24 rounded-full blur-2xl transition-all" style={{ background: "var(--color-accent-soft)" }} />
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-volt-400">
+              <p className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider" style={{ color: "var(--color-accent)" }}>
                 <Sparkles className="h-3.5 w-3.5" />
-                تمرين اليوم المميز
+                Featured exercise
               </p>
-              <p className="mt-1 text-lg font-black text-white">
+              <p className="mt-1 text-lg font-black" style={{ color: "var(--color-text)" }}>
                 {featured.name}
-                <span className="ms-2 text-xs font-bold text-slate-500">{featured.categoryName}</span>
+                <span className="ms-2 text-xs font-bold" style={{ color: "var(--color-text-faint)" }}>{featured.categoryName}</span>
               </p>
-              <p className="mt-0.5 text-xs font-semibold text-slate-400">
-                رقمك القياسي الحالي — جاهز لتحطيمه؟
+              <p className="mt-0.5 text-xs font-semibold" style={{ color: "var(--color-text-muted)" }}>
+                Your current record — ready to break it?
               </p>
             </div>
             <div className="shrink-0 text-start">
-              <p className="tabular text-3xl font-black text-volt-400 drop-shadow-[0_0_18px_rgba(34,197,94,0.5)]">
+              <p className="tabular text-3xl font-black" style={{ color: "var(--color-accent)" }}>
                 {formatWeight(featured.maxWeight)}
               </p>
-              <p className="text-end text-[10px] font-bold text-slate-500">كجم</p>
+              <p className="text-end text-[10px] font-bold" style={{ color: "var(--color-text-faint)" }}>kg</p>
             </div>
           </div>
         </Link>
       )}
 
       {/* Dynamic motivational line */}
-      <div className="flex items-start gap-2.5 rounded-2xl border border-iron-700/70 bg-iron-850/60 px-4 py-3">
-        <Quote className="mt-0.5 h-4 w-4 shrink-0 -scale-x-100 text-ice-400" />
-        <p className="text-xs font-semibold leading-relaxed text-slate-300">{motivation}</p>
+      <div className="flex items-start gap-2.5 rounded-2xl border px-4 py-3" style={{ borderColor: "var(--color-card-border)", background: "var(--color-card)" }}>
+        <Quote className="mt-0.5 h-4 w-4 shrink-0" style={{ color: "var(--color-accent)" }} />
+        <p className="text-xs font-semibold leading-relaxed" style={{ color: "var(--color-text-muted)" }}>{motivation}</p>
       </div>
     </header>
   );

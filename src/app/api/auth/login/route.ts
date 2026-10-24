@@ -9,8 +9,8 @@ import { createSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 const schema = z.object({
-  identifier: z.string().trim().min(5, "أدخل بريدك الإلكتروني أو رقم هاتفك"),
-  password: z.string().min(1, "أدخل كلمة المرور"),
+  identifier: z.string().trim().min(5, "Enter your email or phone number"),
+  password: z.string().min(1, "Enter your password"),
 });
 
 export async function POST(req: NextRequest) {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     const parsed = schema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message ?? "بيانات غير صالحة" },
+        { error: parsed.error.issues[0]?.message ?? "Invalid data" },
         { status: 400 },
       );
     }
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     if (!user || !verifyPassword(password, user.passwordHash)) {
       return NextResponse.json(
-        { error: "بيانات الدخول غير صحيحة — تحقق وحاول مجددًا" },
+        { error: "Invalid credentials — check and try again" },
         { status: 401 },
       );
     }
@@ -49,6 +49,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("login error", error);
-    return NextResponse.json({ error: "تعذر تسجيل الدخول الآن" }, { status: 500 });
+    return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }

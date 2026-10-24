@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { formatDateArShort, formatWeight } from "@/lib/format";
+import { formatDateEnShort, formatWeight } from "@/lib/format";
 
 export interface ChartPoint {
   id: string;
@@ -16,8 +16,8 @@ const H = 320;
 const PAD = { top: 46, bottom: 40, start: 26, end: 56 };
 
 /**
- * Sleek SVG progression chart — weight over time.
- * PR entries glow volt-green and carry a "PR" tag; regular points are cyan.
+ * Clean SVG progression chart — weight over time.
+ * Simple, uncluttered line chart with no PR badges or highlights.
  */
 export default function ProgressChart({ points }: { points: ChartPoint[] }) {
   const [active, setActive] = useState<ChartPoint | null>(
@@ -43,7 +43,7 @@ export default function ProgressChart({ points }: { points: ChartPoint[] }) {
     const n = points.length;
 
     // Strictly chronological reading: index 0 (oldest) on the far LEFT,
-    // newest on the far RIGHT — natural left→right time progression.
+    // newest on the far RIGHT — natural left-to-right time progression.
     const x = (i: number) =>
       n === 1 ? PAD.start + innerW / 2 : PAD.start + (i / (n - 1)) * innerW;
     const y = (w: number) => PAD.top + innerH - ((w - min) / (max - min)) * innerH;
@@ -54,7 +54,7 @@ export default function ProgressChart({ points }: { points: ChartPoint[] }) {
       cy: y(p.weight),
     }));
 
-    // Catmull-Rom → cubic bezier for a buttery line.
+    // Catmull-Rom to cubic bezier for a smooth line.
     let d = `M ${coords[0].cx} ${coords[0].cy}`;
     for (let i = 0; i < coords.length - 1; i++) {
       const p0 = coords[Math.max(0, i - 1)];
@@ -90,16 +90,12 @@ export default function ProgressChart({ points }: { points: ChartPoint[] }) {
         viewBox={`0 0 ${W} ${H}`}
         className="w-full"
         role="img"
-        aria-label="منحنى تقدم الأوزان عبر الزمن"
+        aria-label="Weight progression over time"
       >
         <defs>
           <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22c55e" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#22c55e" />
-            <stop offset="100%" stopColor="#22d3ee" />
+            <stop offset="0%" stopColor="#F95C4B" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#F95C4B" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -111,14 +107,14 @@ export default function ProgressChart({ points }: { points: ChartPoint[] }) {
               x2={W - PAD.end}
               y1={g.cy}
               y2={g.cy}
-              stroke="rgba(148,163,184,0.14)"
+              stroke="rgba(0,0,0,0.06)"
               strokeDasharray="4 6"
             />
             <text
               x={W - PAD.end + 10}
               y={g.cy + 4}
               fontSize="17"
-              fill="#64748b"
+              fill="#a3a3a3"
               fontWeight="700"
             >
               {formatWeight(Math.round(g.w * 10) / 10)}
@@ -131,12 +127,12 @@ export default function ProgressChart({ points }: { points: ChartPoint[] }) {
         <path
           d={geo.d}
           fill="none"
-          stroke="url(#lineGrad)"
-          strokeWidth="4.5"
+          stroke="#F95C4B"
+          strokeWidth="3.5"
           strokeLinecap="round"
         />
 
-        {/* Points — PRs highlighted with filled volt circle + tag */}
+        {/* Points — clean, uniform circles */}
         {geo.coords.map((p) => {
           const isActive = active?.id === p.id;
           return (
@@ -146,41 +142,16 @@ export default function ProgressChart({ points }: { points: ChartPoint[] }) {
               className="cursor-pointer"
               style={{ pointerEvents: "all" }}
             >
-              {/* fat touch target */}
+              {/* Touch target */}
               <circle cx={p.cx} cy={p.cy} r="24" fill="transparent" />
-              {p.isPr && (
-                <circle cx={p.cx} cy={p.cy} r={isActive ? 14 : 11} fill="rgba(34,197,94,0.22)" />
-              )}
               <circle
                 cx={p.cx}
                 cy={p.cy}
-                r={p.isPr ? 8 : 5.5}
-                fill={p.isPr ? "#22c55e" : "#22d3ee"}
-                stroke={isActive ? "#ffffff" : "#0f172a"}
+                r={isActive ? 7 : 5}
+                fill="#F95C4B"
+                stroke={isActive ? "#000000" : "#ffffff"}
                 strokeWidth={isActive ? 3 : 2}
               />
-              {p.isPr && (
-                <g transform={`translate(${p.cx}, ${p.cy - 22})`}>
-                  <rect
-                    x="-19"
-                    y="-12"
-                    width="38"
-                    height="19"
-                    rx="9.5"
-                    fill="#22c55e"
-                  />
-                  <text
-                    x="0"
-                    y="2"
-                    textAnchor="middle"
-                    fontSize="13"
-                    fontWeight="900"
-                    fill="#0f172a"
-                  >
-                    PR
-                  </text>
-                </g>
-              )}
             </g>
           );
         })}
@@ -193,31 +164,26 @@ export default function ProgressChart({ points }: { points: ChartPoint[] }) {
             y={H - 10}
             textAnchor="middle"
             fontSize="17"
-            fill="#64748b"
+            fill="#a3a3a3"
             fontWeight="700"
           >
-            {formatDateArShort(geo.coords[i].date)}
+            {formatDateEnShort(geo.coords[i].date)}
           </text>
         ))}
       </svg>
 
       {/* Tooltip */}
       {active && (
-        <div className="anim-pop pointer-events-none absolute inset-x-0 top-0 mx-auto w-fit rounded-xl border border-iron-600 bg-iron-900/95 px-4 py-2 text-center shadow-xl backdrop-blur" dir="rtl">
-          <span className="tabular text-base font-black text-white">
-            {formatWeight(active.weight)} كجم
+        <div className="anim-pop pointer-events-none absolute inset-x-0 top-0 mx-auto w-fit rounded-xl border px-4 py-2 text-center shadow-lg backdrop-blur" style={{ borderColor: "var(--color-card-border)", background: "var(--color-card)" }}>
+          <span className="tabular text-base font-black" style={{ color: "var(--color-text)" }}>
+            {formatWeight(active.weight)} kg
           </span>
-          <span className="mx-1.5 text-slate-600">·</span>
-          <span className="text-xs font-bold text-ice-300">{active.reps} تكرار</span>
-          <span className="mx-1.5 text-slate-600">·</span>
-          <span className="text-xs font-semibold text-slate-400">
-            {formatDateArShort(active.date)}
+          <span className="mx-1.5" style={{ color: "var(--color-text-faint)" }}>·</span>
+          <span className="text-xs font-bold" style={{ color: "var(--color-text-muted)" }}>{active.reps} reps</span>
+          <span className="mx-1.5" style={{ color: "var(--color-text-faint)" }}>·</span>
+          <span className="text-xs font-semibold" style={{ color: "var(--color-text-faint)" }}>
+            {formatDateEnShort(active.date)}
           </span>
-          {active.isPr && (
-            <span className="ms-1.5 rounded-full bg-volt-500/20 px-2 py-0.5 text-[10px] font-black text-volt-400">
-              PR
-            </span>
-          )}
         </div>
       )}
     </div>

@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 
 /**
  * Shared mobile-first UI primitives.
+ * Uses CSS custom properties for theme-aware colors.
  */
 
 export function Sheet({
@@ -18,7 +19,6 @@ export function Sheet({
   title: string;
   children: ReactNode;
 }) {
-  // Lock body scroll while the sheet is open.
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -42,20 +42,21 @@ export function Sheet({
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={title}>
       <button
-        aria-label="إغلاق"
+        aria-label="Close"
         onClick={onClose}
-        className="anim-overlay-in absolute inset-0 bg-iron-950/75 backdrop-blur-sm"
+        className="anim-overlay-in absolute inset-0 bg-black/40 backdrop-blur-sm"
       />
-      <div className="anim-sheet-up absolute inset-x-0 bottom-0 mx-auto flex max-h-[92dvh] w-full max-w-lg flex-col rounded-t-[2rem] border border-iron-600 border-b-0 bg-iron-850 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-iron-700 px-5 py-4">
+      <div className="anim-sheet-up absolute inset-x-0 bottom-0 mx-auto flex max-h-[92dvh] w-full max-w-lg flex-col rounded-t-[2rem] border shadow-2xl" style={{ background: "var(--color-card)", borderColor: "var(--color-card-border)" }}>
+        <div className="flex items-center justify-between border-b px-5 py-4" style={{ borderColor: "var(--color-card-border)" }}>
           <div className="flex items-center gap-3">
-            <span className="h-1.5 w-10 rounded-full bg-volt-500/70" />
-            <h3 className="text-base font-extrabold text-white">{title}</h3>
+            <span className="h-1.5 w-10 rounded-full" style={{ background: "var(--color-accent)" }} />
+            <h3 className="text-base font-extrabold" style={{ color: "var(--color-text)" }}>{title}</h3>
           </div>
           <button
             onClick={onClose}
-            aria-label="إغلاق النافذة"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-iron-600 bg-iron-800 text-slate-400 transition-colors hover:text-white"
+            aria-label="Close sheet"
+            className="flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
+            style={{ borderColor: "var(--color-card-border)", color: "var(--color-text-muted)" }}
           >
             <X className="h-4.5 w-4.5" />
           </button>
@@ -84,7 +85,8 @@ export function PrimaryButton({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-l from-volt-500 to-volt-600 py-3.5 text-sm font-black text-iron-950 transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+      className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-black text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+      style={{ background: "var(--color-accent)" }}
     >
       {children}
     </button>
@@ -107,11 +109,12 @@ export function GhostButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-50 ${
+      className="flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-50"
+      style={
         danger
-          ? "border-rose-500/40 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20"
-          : "border-iron-600 bg-iron-800 text-slate-300 hover:border-iron-600 hover:text-white"
-      }`}
+          ? { borderColor: "var(--color-accent)", background: "var(--color-accent-soft)", color: "var(--color-accent-text)" }
+          : { borderColor: "var(--color-card-border)", background: "var(--color-card)", color: "var(--color-text-muted)" }
+      }
     >
       {children}
     </button>
@@ -120,7 +123,7 @@ export function GhostButton({
 
 export function FieldLabel({ children }: { children: ReactNode }) {
   return (
-    <span className="mb-1.5 block text-xs font-bold text-slate-300">{children}</span>
+    <span className="mb-1.5 block text-xs font-bold" style={{ color: "var(--color-text-muted)" }}>{children}</span>
   );
 }
 
@@ -128,7 +131,15 @@ export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`w-full rounded-xl border border-iron-600 bg-iron-800 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/25 ${props.className ?? ""}`}
+      className={`w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2 ${props.className ?? ""}`}
+      style={{
+        borderColor: "var(--color-card-border)",
+        background: "var(--color-input-bg)",
+        color: "var(--color-text)",
+        // @ts-expect-error CSS custom property
+        "--tw-ring-color": "var(--color-accent)",
+        ...(props.style ?? {}),
+      }}
     />
   );
 }
@@ -160,12 +171,13 @@ export function Stepper({
     onChange(next.toString());
   };
   return (
-    <div className="flex items-stretch overflow-hidden rounded-xl border border-iron-600 bg-iron-800 focus-within:border-volt-500 focus-within:ring-2 focus-within:ring-volt-500/25">
+    <div className="flex items-stretch overflow-hidden rounded-xl border focus-within:ring-2" style={{ borderColor: "var(--color-card-border)", background: "var(--color-input-bg)", "--tw-ring-color": "var(--color-accent)" } as React.CSSProperties}>
       <button
         type="button"
-        aria-label="زيادة"
+        aria-label="Increase"
         onClick={() => apply(step)}
-        className="w-12 shrink-0 bg-iron-700/60 text-xl font-black text-volt-400 transition-colors hover:bg-iron-700 active:bg-volt-500 active:text-iron-950"
+        className="w-12 shrink-0 text-xl font-black transition-colors"
+        style={{ background: "var(--color-hover)", color: "var(--color-accent)" }}
       >
         +
       </button>
@@ -177,18 +189,20 @@ export function Stepper({
             const v = e.target.value.replace(/[^\d.]/g, "");
             onChange(v);
           }}
-          className="tabular w-full bg-transparent py-3 text-center text-lg font-black text-white focus:outline-none"
+          className="tabular w-full bg-transparent py-3 text-center text-lg font-black focus:outline-none"
+          style={{ color: "var(--color-text)" }}
           placeholder="0"
         />
-        <span className="pointer-events-none absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-slate-500">
+        <span className="pointer-events-none absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[10px] font-bold" style={{ color: "var(--color-text-faint)" }}>
           {suffix}
         </span>
       </div>
       <button
         type="button"
-        aria-label="إنقاص"
+        aria-label="Decrease"
         onClick={() => apply(-step)}
-        className="w-12 shrink-0 bg-iron-700/60 text-xl font-black text-slate-300 transition-colors hover:bg-iron-700 active:bg-rose-500/70 active:text-white"
+        className="w-12 shrink-0 text-xl font-black transition-colors"
+        style={{ background: "var(--color-hover)", color: "var(--color-text-muted)" }}
       >
         −
       </button>

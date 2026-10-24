@@ -4,11 +4,12 @@ import { Download, Mail, Smartphone } from "lucide-react";
 import { db } from "@/db";
 import { categories, exercises, prEntries } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth";
-import { formatCount, formatDateAr } from "@/lib/format";
+import { formatCount, formatDateEn } from "@/lib/format";
 import CategoryManager from "@/components/category-manager";
 import LogoutButton from "@/components/logout-button";
+import ThemeSelector from "@/components/theme-selector";
 
-export const metadata: Metadata = { title: "حسابي" };
+export const metadata: Metadata = { title: "My Account" };
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
@@ -39,15 +40,15 @@ export default async function ProfilePage() {
   return (
     <main className="stagger space-y-5 px-4 pt-6">
       {/* Identity card */}
-      <section className="glass-card relative overflow-hidden rounded-3xl p-6">
-        <div className="absolute -start-10 -top-10 h-40 w-40 rounded-full bg-ice-500/10 blur-3xl" />
+      <section className="clean-card relative overflow-hidden rounded-3xl p-6">
+        <div className="absolute -start-10 -top-10 h-40 w-40 rounded-full blur-3xl" style={{ background: "var(--color-accent-soft)" }} />
         <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-volt-500 to-ice-500 text-3xl font-black text-iron-950">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-3xl font-black text-white" style={{ background: "var(--color-accent)" }}>
             {initial}
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-xl font-black text-white">{user.name}</h1>
-            <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-slate-400">
+            <h1 className="truncate text-xl font-black" style={{ color: "var(--color-text)" }}>{user.name}</h1>
+            <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold" style={{ color: "var(--color-text-muted)" }}>
               {user.email && (
                 <span className="flex items-center gap-1" dir="ltr">
                   <Mail className="h-3.5 w-3.5" />
@@ -61,52 +62,55 @@ export default async function ProfilePage() {
                 </span>
               )}
             </p>
-            <p className="mt-1 text-[11px] font-bold text-slate-500">
-              عضو الحديد منذ {formatDateAr(user.createdAt)}
+            <p className="mt-1 text-[11px] font-bold" style={{ color: "var(--color-text-faint)" }}>
+              Iron member since {formatDateEn(user.createdAt)}
             </p>
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-4 gap-2 border-t border-iron-700 pt-4 text-center">
+        <div className="mt-5 grid grid-cols-4 gap-2 border-t pt-4 text-center" style={{ borderColor: "var(--color-card-border)" }}>
           <div>
-            <p className="tabular text-lg font-black text-volt-400">{formatCount(stats?.prs ?? 0)}</p>
-            <p className="text-[9px] font-bold text-slate-500">أرقام قياسية</p>
+            <p className="tabular text-lg font-black" style={{ color: "var(--color-accent)" }}>{formatCount(stats?.prs ?? 0)}</p>
+            <p className="text-[9px] font-bold" style={{ color: "var(--color-text-faint)" }}>PRs</p>
           </div>
           <div>
-            <p className="tabular text-lg font-black text-white">{formatCount(stats?.entries ?? 0)}</p>
-            <p className="text-[9px] font-bold text-slate-500">سجل</p>
+            <p className="tabular text-lg font-black" style={{ color: "var(--color-text)" }}>{formatCount(stats?.entries ?? 0)}</p>
+            <p className="text-[9px] font-bold" style={{ color: "var(--color-text-faint)" }}>Entries</p>
           </div>
           <div>
-            <p className="tabular text-lg font-black text-white">{formatCount(exCount?.count ?? 0)}</p>
-            <p className="text-[9px] font-bold text-slate-500">تمرين</p>
+            <p className="tabular text-lg font-black" style={{ color: "var(--color-text)" }}>{formatCount(exCount?.count ?? 0)}</p>
+            <p className="text-[9px] font-bold" style={{ color: "var(--color-text-faint)" }}>Exercises</p>
           </div>
           <div>
-            <p className="tabular text-lg font-black text-ice-300">
+            <p className="tabular text-lg font-black text-teal-600">
               {stats?.topWeight ? formatCount(Math.round(stats.topWeight)) : "—"}
             </p>
-            <p className="text-[9px] font-bold text-slate-500">أثقل وزن (كجم)</p>
+            <p className="text-[9px] font-bold" style={{ color: "var(--color-text-faint)" }}>Top Weight (kg)</p>
           </div>
         </div>
       </section>
+
+      {/* Theme preference */}
+      <ThemeSelector />
 
       {/* Quick export */}
       <a
         href="/api/export"
         download
-        className="glass-card flex items-center justify-between rounded-2xl p-4 transition-all hover:border-volt-500/40"
+        className="clean-card flex items-center justify-between rounded-2xl p-4 transition-all hover:opacity-80"
       >
         <span className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-volt-500/15 text-volt-400">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: "var(--color-accent-soft)", color: "var(--color-accent)" }}>
             <Download className="h-5 w-5" />
           </span>
           <span>
-            <span className="block text-sm font-black text-white">تصدير بياناتي</span>
-            <span className="block text-[11px] font-semibold text-slate-500">
-              ملف CSV جاهز لـ Excel وGoogle Sheets
+            <span className="block text-sm font-black" style={{ color: "var(--color-text)" }}>Export my data</span>
+            <span className="block text-[11px] font-semibold" style={{ color: "var(--color-text-faint)" }}>
+              CSV file ready for Excel and Google Sheets
             </span>
           </span>
         </span>
-        <span className="rounded-full bg-volt-500/15 px-3 py-1 text-[10px] font-black text-volt-400">
+        <span className="rounded-full px-3 py-1 text-[10px] font-black" style={{ background: "var(--color-accent-soft)", color: "var(--color-accent-text)" }}>
           CSV
         </span>
       </a>
@@ -127,8 +131,8 @@ export default async function ProfilePage() {
       {/* Danger / session */}
       <section className="space-y-3">
         <LogoutButton />
-        <p className="pb-4 text-center text-[10px] font-semibold text-slate-600">
-          آيرون فالت · IronVault — بياناتك معزولة بالكامل ولا تُشارك مع أحد.
+        <p className="pb-4 text-center text-[10px] font-semibold" style={{ color: "var(--color-text-faint)" }}>
+          IronVault — your data is fully isolated and never shared with anyone.
         </p>
       </section>
     </main>

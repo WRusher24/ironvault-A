@@ -5,7 +5,7 @@ import { categories, exercises, prEntries } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth";
 import HistoryList from "@/components/history-list";
 
-export const metadata: Metadata = { title: "السجل الكامل" };
+export const metadata: Metadata = { title: "Full History" };
 export const dynamic = "force-dynamic";
 
 export default async function HistoryPage() {
@@ -34,9 +34,9 @@ export default async function HistoryPage() {
   return (
     <main className="px-4 pt-6">
       <header className="anim-fade-up mb-5">
-        <h1 className="text-2xl font-black text-white">السجل الكامل</h1>
-        <p className="mt-1 text-xs font-semibold text-slate-500">
-          كل تكرار رفعته، موثق بالترتيب الزمني — أحدثها أولًا.
+        <h1 className="text-2xl font-black" style={{ color: "var(--color-text)" }}>Full History</h1>
+        <p className="mt-1 text-xs font-semibold" style={{ color: "var(--color-text-faint)" }}>
+          Every rep you&apos;ve lifted, documented chronologically — newest first.
         </p>
       </header>
       <HistoryList

@@ -11,10 +11,10 @@ export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ id: string }> };
 
 const patchSchema = z.object({
-  weightKg: z.number().positive("الوزن يجب أن يكون أكبر من صفر").max(2000).optional(),
+  weightKg: z.number().positive("Weight must be greater than zero").max(2000).optional(),
   reps: z.number().int().min(1).max(500).optional(),
   note: z.string().trim().max(300).nullable().optional(),
-  performedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "صيغة التاريخ غير صحيحة").optional(),
+  performedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format").optional(),
 });
 
 export async function PATCH(req: NextRequest, ctx: Ctx) {
@@ -24,7 +24,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   const parsed = patchSchema.safeParse(await req.json());
   if (!parsed.success) {
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "بيانات غير صالحة" },
+      { error: parsed.error.issues[0]?.message ?? "Invalid data" },
       { status: 400 },
     );
   }
@@ -39,7 +39,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
     .where(and(eq(prEntries.id, id), eq(prEntries.userId, user.id)))
     .returning();
   if (!updated) {
-    return NextResponse.json({ error: "السجل غير موجود" }, { status: 404 });
+    return NextResponse.json({ error: "Entry not found" }, { status: 404 });
   }
   // Weights/dates changed → PR flags may shift across the whole timeline.
   await recomputePrs(updated.exerciseId);
@@ -55,7 +55,7 @@ export async function DELETE(_req: NextRequest, ctx: Ctx) {
     .where(and(eq(prEntries.id, id), eq(prEntries.userId, user.id)))
     .returning({ id: prEntries.id, exerciseId: prEntries.exerciseId });
   if (!deleted) {
-    return NextResponse.json({ error: "السجل غير موجود" }, { status: 404 });
+    return NextResponse.json({ error: "Entry not found" }, { status: 404 });
   }
   await recomputePrs(deleted.exerciseId);
   return NextResponse.json({ ok: true });

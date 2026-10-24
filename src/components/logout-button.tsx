@@ -24,10 +24,11 @@ export default function LogoutButton() {
     <button
       onClick={() => void logout()}
       disabled={busy}
-      className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-500/40 bg-rose-500/10 py-4 text-sm font-black text-rose-300 transition-all hover:bg-rose-500/20 active:scale-[0.98] disabled:opacity-50"
+      className="flex w-full items-center justify-center gap-2 rounded-2xl border py-4 text-sm font-black transition-all hover:opacity-80 active:scale-[0.98] disabled:opacity-50"
+      style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)", color: "var(--color-accent-text)" }}
     >
       <LogOut className="h-4.5 w-4.5" />
-      {busy ? "جارٍ تسجيل الخروج..." : "تسجيل الخروج"}
+      {busy ? "Logging out..." : "Log out"}
     </button>
   );
 }

@@ -36,25 +36,25 @@ export function categoryIcon(key: string): LucideIcon {
   return CATEGORY_ICONS[key] ?? Dumbbell;
 }
 
-/** Neon accent palettes (hex pairs used for gradients/glows). */
+/** Accent palettes (hex pairs used for category color coding). */
 export const CATEGORY_COLORS: Record<
   string,
   { label: string; hex: string; soft: string }
 > = {
-  volt: { label: "أخضر نيون", hex: "#22c55e", soft: "rgba(34,197,94,0.14)" },
-  cyan: { label: "سماوي", hex: "#22d3ee", soft: "rgba(34,211,238,0.14)" },
-  violet: { label: "بنفسجي", hex: "#a78bfa", soft: "rgba(167,139,250,0.14)" },
-  amber: { label: "كهرماني", hex: "#f59e0b", soft: "rgba(245,158,11,0.14)" },
-  rose: { label: "وردي", hex: "#fb7185", soft: "rgba(251,113,133,0.14)" },
-  blue: { label: "أزرق", hex: "#60a5fa", soft: "rgba(96,165,250,0.14)" },
-  lime: { label: "ليموني", hex: "#a3e635", soft: "rgba(163,230,53,0.14)" },
-  orange: { label: "برتقالي", hex: "#fb923c", soft: "rgba(251,146,60,0.14)" },
+  coral: { label: "Coral", hex: "#F95C4B", soft: "rgba(249,92,75,0.12)" },
+  amber: { label: "Amber", hex: "#f59e0b", soft: "rgba(245,158,11,0.12)" },
+  rose: { label: "Rose", hex: "#fb7185", soft: "rgba(251,113,133,0.12)" },
+  blue: { label: "Blue", hex: "#60a5fa", soft: "rgba(96,165,250,0.12)" },
+  violet: { label: "Violet", hex: "#a78bfa", soft: "rgba(167,139,250,0.12)" },
+  teal: { label: "Teal", hex: "#2dd4bf", soft: "rgba(45,212,191,0.12)" },
+  orange: { label: "Orange", hex: "#fb923c", soft: "rgba(251,146,60,0.12)" },
+  slate: { label: "Slate", hex: "#64748b", soft: "rgba(100,116,139,0.12)" },
 };
 
 export const CATEGORY_COLOR_KEYS = Object.keys(CATEGORY_COLORS);
 
 export function categoryColor(key: string) {
-  return CATEGORY_COLORS[key] ?? CATEGORY_COLORS.volt;
+  return CATEGORY_COLORS[key] ?? CATEGORY_COLORS.coral;
 }
 
 /** Default starter categories for brand-new vaults. */
@@ -64,11 +64,11 @@ export const DEFAULT_CATEGORIES: {
   icon: string;
   color: string;
 }[] = [
-  { name: "الصدر", nameEn: "Chest", icon: "shield", color: "rose" },
-  { name: "الظهر", nameEn: "Back", icon: "anchor", color: "cyan" },
-  { name: "الأكتاف", nameEn: "Shoulders", icon: "mountain", color: "amber" },
-  { name: "الأذرع", nameEn: "Arms", icon: "dumbbell", color: "violet" },
-  { name: "الترايسبس", nameEn: "Triceps", icon: "zap", color: "orange" },
-  { name: "الأرجل", nameEn: "Legs", icon: "flame", color: "volt" },
-  { name: "البطن والجذع", nameEn: "Core", icon: "target", color: "blue" },
+  { name: "Chest", nameEn: "Chest", icon: "shield", color: "rose" },
+  { name: "Back", nameEn: "Back", icon: "anchor", color: "blue" },
+  { name: "Shoulders", nameEn: "Shoulders", icon: "mountain", color: "amber" },
+  { name: "Arms", nameEn: "Arms", icon: "dumbbell", color: "violet" },
+  { name: "Triceps", nameEn: "Triceps", icon: "zap", color: "coral" },
+  { name: "Legs", nameEn: "Legs", icon: "flame", color: "teal" },
+  { name: "Core", nameEn: "Core", icon: "target", color: "orange" },
 ];

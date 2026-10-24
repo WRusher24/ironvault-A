@@ -8,9 +8,9 @@ import { requireUser } from "@/lib/guard";
 export const dynamic = "force-dynamic";
 
 const createSchema = z.object({
-  name: z.string().trim().min(1, "أدخل اسم التمرين").max(160),
+  name: z.string().trim().min(1, "Enter exercise name").max(160),
   nameEn: z.string().trim().max(160).optional().nullable(),
-  categoryId: z.string().uuid("اختر فئة صحيحة"),
+  categoryId: z.string().uuid("Choose a valid category"),
   imageUrl: z.string().max(500).optional().nullable(),
 });
 
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
   const parsed = createSchema.safeParse(await req.json());
   if (!parsed.success) {
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "بيانات غير صالحة" },
+      { error: parsed.error.issues[0]?.message ?? "Invalid data" },
       { status: 400 },
     );
   }
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     )
     .limit(1);
   if (!cat) {
-    return NextResponse.json({ error: "الفئة المحددة غير موجودة" }, { status: 400 });
+    return NextResponse.json({ error: "Category not found" }, { status: 400 });
   }
 
   const [created] = await db

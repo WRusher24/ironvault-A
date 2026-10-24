@@ -10,12 +10,12 @@ import { DEFAULT_CATEGORIES } from "@/lib/categories";
 export const dynamic = "force-dynamic";
 
 const schema = z.object({
-  name: z.string().trim().min(2, "الاسم يجب أن يكون حرفين على الأقل").max(120),
-  identifier: z.string().trim().min(5, "أدخل بريدًا إلكترونيًا أو رقم هاتف صحيحًا").max(255),
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(120),
+  identifier: z.string().trim().min(5, "Enter a valid email or phone number").max(255),
   password: z
     .string()
-    .min(8, "كلمة المرور يجب ألا تقل عن 8 أحرف")
-    .max(100, "كلمة المرور طويلة جدًا"),
+    .min(8, "Password must be at least 8 characters")
+    .max(100, "Password is too long"),
 });
 
 function detectIdentifier(raw: string): { email?: string; phone?: string } {
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     const parsed = schema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[0]?.message ?? "بيانات غير صالحة" },
+        { error: parsed.error.issues[0]?.message ?? "Invalid data" },
         { status: 400 },
       );
     }
@@ -42,13 +42,13 @@ export async function POST(req: NextRequest) {
 
     if (idn.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(idn.email)) {
       return NextResponse.json(
-        { error: "صيغة البريد الإلكتروني غير صحيحة" },
+        { error: "Invalid email format" },
         { status: 400 },
       );
     }
     if (idn.phone && !/^\+?\d{7,15}$/.test(idn.phone)) {
       return NextResponse.json(
-        { error: "صيغة رقم الهاتف غير صحيحة" },
+        { error: "Invalid phone number format" },
         { status: 400 },
       );
     }
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       .limit(1);
     if (existing.length > 0) {
       return NextResponse.json(
-        { error: "هذا الحساب مسجل بالفعل — جرّب تسجيل الدخول" },
+        { error: "Account already exists — try logging in" },
         { status: 409 },
       );
     }
@@ -100,11 +100,11 @@ export async function POST(req: NextRequest) {
     // Unique-violation race guard
     if ((error as { code?: string })?.code === "23505") {
       return NextResponse.json(
-        { error: "هذا الحساب مسجل بالفعل — جرّب تسجيل الدخول" },
+        { error: "Account already exists — try logging in" },
         { status: 409 },
       );
     }
     console.error("register error", error);
-    return NextResponse.json({ error: "تعذر إنشاء الحساب الآن" }, { status: 500 });
+    return NextResponse.json({ error: "Registration failed" }, { status: 500 });
   }
 }

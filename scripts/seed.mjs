@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * IronVault — آيرون فالت · Database seed
+ * IronVault — Database seed
  *
  * Creates the initial ADMIN account pre-populated with a realistic
  * ~14-week progressive-overload vault (categories, exercises, PR history
@@ -21,7 +21,7 @@ const DATABASE_URL =
   process.env.DATABASE_URL ?? "postgresql://postgres:postgres@127.0.0.1:5432/app_db";
 
 const ADMIN = {
-  name: "بطل الحديد",
+  name: "Iron Champion",
   email: "admin@ironvault.app",
   password: "IronVault#2026",
 };
@@ -57,49 +57,49 @@ function isoDaysAgo(days) {
 
 /* ---------- vault blueprint ---------- */
 const CATEGORIES = [
-  { key: "chest", name: "الصدر", nameEn: "Chest", icon: "shield", color: "rose" },
-  { key: "back", name: "الظهر", nameEn: "Back", icon: "anchor", color: "cyan" },
-  { key: "shoulders", name: "الأكتاف", nameEn: "Shoulders", icon: "mountain", color: "amber" },
-  { key: "arms", name: "الأذرع", nameEn: "Arms", icon: "dumbbell", color: "violet" },
-  { key: "triceps", name: "الترايسبس", nameEn: "Triceps", icon: "zap", color: "orange" },
-  { key: "legs", name: "الأرجل", nameEn: "Legs", icon: "flame", color: "volt" },
-  { key: "core", name: "البطن والجذع", nameEn: "Core", icon: "target", color: "blue" },
+  { key: "chest", name: "Chest", nameEn: "Chest", icon: "shield", color: "rose" },
+  { key: "back", name: "Back", nameEn: "Back", icon: "anchor", color: "blue" },
+  { key: "shoulders", name: "Shoulders", nameEn: "Shoulders", icon: "mountain", color: "amber" },
+  { key: "arms", name: "Arms", nameEn: "Arms", icon: "dumbbell", color: "violet" },
+  { key: "triceps", name: "Triceps", nameEn: "Triceps", icon: "zap", color: "coral" },
+  { key: "legs", name: "Legs", nameEn: "Legs", icon: "flame", color: "teal" },
+  { key: "core", name: "Core", nameEn: "Core", icon: "target", color: "orange" },
 ];
 
 const EXERCISES = [
-  // [category, nameAr, nameEn, startKg, endKg, sessions, repRange, noteBank]
-  ["chest", "ضغط البنش", "Bench Press", 60, 92.5, 14, [4, 8],
-    ["بار أولمبي 20kg", "Felt strong", "Rest 3 min", "آخر مجموعة ثقيلة", "صدور مفتوحة"]],
-  ["chest", "الضغط المائل بالدمبل", "Incline Dumbbell Press", 40, 60, 12, [6, 10],
-    ["دمبل +20kg لكل يد", "Bench angle 30°", "شد كامل بالأسفل"]],
-  ["chest", "فتح صدر بالكيبل", "Cable Fly", 20, 35, 10, [10, 15],
-    ["High pulley", "ضغط بطيء", "Burnout set"]],
-  ["back", "Wide Lat Pulldown", "سحب لات واسع", 55, 82.5, 14, [6, 10],
-    ["Wide grip", "Inside Hammers", "صدر مرفوع", "سحب للصدر العلوي"]],
-  ["back", "Cable Rows", "سحب كيبل جالس", 50, 80, 13, [8, 12],
-    ["V-bar", "Inside Hammers", "ظهر مستقيم", "Pause 1s"]],
-  ["back", "الرفعة الميتة", "Deadlift", 100, 162.5, 12, [3, 6],
-    ["Bar + 30kg", "بدون حزام", "Straps on", "ظهر محايد", "Heavy single"]],
-  ["shoulders", "Shoulder Press", "ضغط أكتاف بالبار", 30, 47.5, 13, [6, 10],
-    ["Seated", "Standing", "آخر مجموعة ثقيلة", "Core tight"]],
-  ["shoulders", "رفع جانبي بالدمبل", "Dumbbell Lateral Raise", 10, 17.5, 12, [10, 15],
-    ["Strict form", "Partial reps آخر سيت", "Tempo 3-1-3"]],
-  ["shoulders", "سحب الوجه بالحبل", "Face Pull", 15, 32.5, 10, [12, 15],
-    ["Rope attachment", "كوع عالي", "للصحة الكتفية"]],
-  ["arms", "بايسبس بالبار", "Barbell Curl", 25, 42.5, 12, [8, 12],
-    ["EZ bar", "Straight bar", "ثبات الكوع", "21s finisher"]],
-  ["triceps", "ترايسبس كيبل", "Triceps Pushdown", 25, 47.5, 12, [8, 14],
-    ["Rope", "V-bar", "Overhead", "حرق ناري"]],
-  ["arms", "هامر كيرل", "Hammer Curl", 16, 26, 10, [8, 12],
-    ["Neutral grip", "Across body", "بطيء بالنزول"]],
-  ["legs", "سكوات", "Back Squat", 80, 132.5, 14, [4, 6],
-    ["عمق كامل ATG", "Belt on", "Bar + 30kg", "كعبين ثابتين", "Pause squats"]],
-  ["legs", "ضغط الأرجل", "Leg Press", 140, 245, 12, [8, 12],
+  // [category, name, nameEn, startKg, endKg, sessions, repRange, noteBank]
+  ["chest", "Bench Press", "Bench Press", 60, 92.5, 14, [4, 8],
+    ["Bar + 20kg", "Felt strong", "Rest 3 min", "Last set heavy", "Chest up"]],
+  ["chest", "Incline Dumbbell Press", "Incline Dumbbell Press", 40, 60, 12, [6, 10],
+    ["DB +20kg each hand", "Bench angle 30°", "Full stretch at bottom"]],
+  ["chest", "Cable Fly", "Cable Fly", 20, 35, 10, [10, 15],
+    ["High pulley", "Slow squeeze", "Burnout set"]],
+  ["back", "Wide Lat Pulldown", "Wide Lat Pulldown", 55, 82.5, 14, [6, 10],
+    ["Wide grip", "Inside Hammers", "Chest up", "Pull to upper chest"]],
+  ["back", "Cable Rows", "Cable Rows", 50, 80, 13, [8, 12],
+    ["V-bar", "Inside Hammers", "Straight back", "Pause 1s"]],
+  ["back", "Deadlift", "Deadlift", 100, 162.5, 12, [3, 6],
+    ["Bar + 30kg", "No belt", "Straps on", "Neutral spine", "Heavy single"]],
+  ["shoulders", "Shoulder Press", "Shoulder Press", 30, 47.5, 13, [6, 10],
+    ["Seated", "Standing", "Last set heavy", "Core tight"]],
+  ["shoulders", "Dumbbell Lateral Raise", "Dumbbell Lateral Raise", 10, 17.5, 12, [10, 15],
+    ["Strict form", "Partial reps last set", "Tempo 3-1-3"]],
+  ["shoulders", "Face Pull", "Face Pull", 15, 32.5, 10, [12, 15],
+    ["Rope attachment", "Elbows high", "Shoulder health"]],
+  ["arms", "Barbell Curl", "Barbell Curl", 25, 42.5, 12, [8, 12],
+    ["EZ bar", "Straight bar", "Elbows pinned", "21s finisher"]],
+  ["triceps", "Triceps Pushdown", "Triceps Pushdown", 25, 47.5, 12, [8, 14],
+    ["Rope", "V-bar", "Overhead", "Intense burn"]],
+  ["arms", "Hammer Curl", "Hammer Curl", 16, 26, 10, [8, 12],
+    ["Neutral grip", "Across body", "Slow negatives"]],
+  ["legs", "Back Squat", "Back Squat", 80, 132.5, 14, [4, 6],
+    ["Full depth ATG", "Belt on", "Bar + 30kg", "Feet planted", "Pause squats"]],
+  ["legs", "Leg Press", "Leg Press", 140, 245, 12, [8, 12],
     ["Feet high", "Feet low", "Machine plate #14", "Drop set"]],
-  ["legs", "رفعة السمانة واقفًا", "Standing Calf Raise", 60, 105, 10, [10, 15],
-    ["Stretch كامل", "Pause by top", "Slow negatives"]],
-  ["core", "كرانش بالأثقال", "Weighted Cable Crunch", 10, 27.5, 10, [12, 20],
-    ["Rope pulldown", "انحناء كامل", "ضغط البطن"]],
+  ["legs", "Standing Calf Raise", "Standing Calf Raise", 60, 105, 10, [10, 15],
+    ["Full stretch", "Pause at top", "Slow negatives"]],
+  ["core", "Weighted Cable Crunch", "Weighted Cable Crunch", 10, 27.5, 10, [12, 20],
+    ["Rope pulldown", "Full crunch", "Core squeeze"]],
 ];
 
 /* ---------- entry synthesis ---------- */

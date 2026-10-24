@@ -14,21 +14,21 @@ const createSchema = z.object({
   exerciseId: z.string().uuid().optional(),
   newExercise: z
     .object({
-      name: z.string().trim().min(1, "أدخل اسم التمرين").max(160),
-      categoryId: z.string().uuid("اختر فئة صحيحة"),
+      name: z.string().trim().min(1, "Enter exercise name").max(160),
+      categoryId: z.string().uuid("Choose a valid category"),
     })
     .optional(),
   weightKg: z
-    .number({ error: "أدخل وزنًا صحيحًا بالكيلوغرام" })
-    .positive("الوزن يجب أن يكون أكبر من صفر")
-    .max(2000, "الوزن غير منطقي"),
+    .number({ error: "Enter a valid weight in kilograms" })
+    .positive("Weight must be greater than zero")
+    .max(2000, "Unrealistic weight"),
   reps: z
-    .number({ error: "أدخل عدد التكرارات" })
-    .int("التكرارات يجب أن تكون رقمًا صحيحًا")
-    .min(1, "تكرار واحد على الأقل")
+    .number({ error: "Enter number of reps" })
+    .int("Reps must be a whole number")
+    .min(1, "At least one rep")
     .max(500),
   note: z.string().trim().max(300).optional().nullable(),
-  performedAt: z.string().regex(ISO_DATE, "صيغة التاريخ غير صحيحة"),
+  performedAt: z.string().regex(ISO_DATE, "Invalid date format"),
 });
 
 /**
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   const parsed = createSchema.safeParse(await req.json());
   if (!parsed.success) {
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "بيانات غير صالحة" },
+      { error: parsed.error.issues[0]?.message ?? "Invalid data" },
       { status: 400 },
     );
   }
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       )
       .limit(1);
     if (!cat) {
-      return NextResponse.json({ error: "الفئة المحددة غير موجودة" }, { status: 400 });
+      return NextResponse.json({ error: "Category not found" }, { status: 400 });
     }
     const [created] = await db
       .insert(exercises)
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!exerciseId) {
-    return NextResponse.json({ error: "اختر تمرينًا أو أنشئ تمرينًا جديدًا" }, { status: 400 });
+    return NextResponse.json({ error: "Pick an exercise or create a new one" }, { status: 400 });
   }
 
   // Strict isolation: verify the exercise belongs to this user.
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
     .where(and(eq(exercises.id, exerciseId), eq(exercises.userId, user.id)))
     .limit(1);
   if (!exercise) {
-    return NextResponse.json({ error: "التمرين غير موجود" }, { status: 404 });
+    return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
   }
 
   // TRUE PR semantics — a PR is exclusively the absolute highest weight ever

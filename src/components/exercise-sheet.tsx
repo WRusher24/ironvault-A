@@ -68,10 +68,10 @@ export default function ExerciseSheet({
       form.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", body: form });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "فشل رفع الصورة");
+      if (!res.ok) throw new Error(data.error ?? "Image upload failed");
       setImageUrl(data.url as string);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "فشل رفع الصورة — حاول مجددًا");
+      setError(err instanceof Error ? err.message : "Image upload failed — please try again");
     } finally {
       setUploading(false);
     }
@@ -81,11 +81,11 @@ export default function ExerciseSheet({
     e.preventDefault();
     setError(null);
     if (!name.trim()) {
-      setError("أدخل اسم التمرين");
+      setError("Enter an exercise name");
       return;
     }
     if (!categoryId) {
-      setError("اختر المجموعة العضلية");
+      setError("Choose a muscle group");
       return;
     }
     setLoading(true);
@@ -114,18 +114,18 @@ export default function ExerciseSheet({
       onClose();
       router.refresh();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "تعذر الحفظ — حاول مجددًا");
+      setError(err instanceof ApiError ? err.message : "Save failed — please try again");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Sheet open={open} onClose={onClose} title={isEdit ? "تعديل التمرين" : "إضافة تمرين جديد"}>
+    <Sheet open={open} onClose={onClose} title={isEdit ? "Edit Exercise" : "Add New Exercise"}>
       <form onSubmit={onSubmit} className="space-y-5">
         {/* Photo upload — stored via Vercel Blob */}
         <div>
-          <FieldLabel>صورة التمرين (اختياري)</FieldLabel>
+          <FieldLabel>Exercise photo (optional)</FieldLabel>
           <input
             ref={fileRef}
             type="file"
@@ -138,23 +138,25 @@ export default function ExerciseSheet({
             }}
           />
           {imageUrl ? (
-            <div className="relative overflow-hidden rounded-2xl border border-iron-600">
+            <div className="relative overflow-hidden rounded-2xl border" style={{ borderColor: "var(--color-card-border)" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imageUrl} alt="صورة التمرين" className="h-40 w-full object-cover" />
-              <div className="absolute inset-x-0 bottom-0 flex gap-2 bg-gradient-to-t from-iron-950/90 to-transparent p-3">
+              <img src={imageUrl} alt="Exercise photo" className="h-40 w-full object-cover" />
+              <div className="absolute inset-x-0 bottom-0 flex gap-2 bg-gradient-to-t from-black/60 to-transparent p-3">
                 <button
                   type="button"
                   onClick={() => fileRef.current?.click()}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-iron-800/90 py-2 text-xs font-bold text-white backdrop-blur"
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold backdrop-blur"
+                  style={{ background: "rgba(255,255,255,0.9)", color: "var(--color-text)" }}
                 >
                   <Camera className="h-4 w-4" />
-                  تغيير الصورة
+                  Change photo
                 </button>
                 <button
                   type="button"
                   onClick={() => setImageUrl(null)}
-                  className="flex items-center justify-center rounded-lg bg-rose-500/80 px-3 py-2 text-white backdrop-blur"
-                  aria-label="إزالة الصورة"
+                  className="flex items-center justify-center rounded-lg px-3 py-2 text-white backdrop-blur"
+                  style={{ background: "var(--color-accent)" }}
+                  aria-label="Remove photo"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -165,18 +167,21 @@ export default function ExerciseSheet({
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading}
-              className="flex h-36 w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-iron-600 bg-iron-800/50 text-slate-500 transition-colors hover:border-volt-500/50 hover:text-volt-400 disabled:opacity-60"
+              className="flex h-36 w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed transition-colors disabled:opacity-60"
+              style={{ borderColor: "var(--color-card-border)", background: "var(--color-hover)", color: "var(--color-text-faint)" }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-accent)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-card-border)"; e.currentTarget.style.color = "var(--color-text-faint)"; }}
             >
               {uploading ? (
                 <>
                   <LoaderCircle className="h-6 w-6 animate-spin" />
-                  <span className="text-xs font-bold">جارٍ رفع الصورة...</span>
+                  <span className="text-xs font-bold">Uploading photo...</span>
                 </>
               ) : (
                 <>
                   <ImagePlus className="h-6 w-6" />
-                  <span className="text-xs font-bold">اضغط لرفع صورة — جهاز، قبضة، أو إعداد</span>
-                  <span className="text-[10px]">JPG · PNG · WebP — حتى 5 ميغابايت</span>
+                  <span className="text-xs font-bold">Tap to upload a photo — machine, grip, or setup</span>
+                  <span className="text-[10px]">JPG · PNG · WebP — up to 5 MB</span>
                 </>
               )}
             </button>
@@ -184,18 +189,18 @@ export default function ExerciseSheet({
         </div>
 
         <div>
-          <FieldLabel>اسم التمرين</FieldLabel>
+          <FieldLabel>Exercise name</FieldLabel>
           <TextInput
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="مثال: ضغط البنش أو Bench Press"
+            placeholder="e.g. Bench Press or Incline Dumbbell Press"
             maxLength={160}
             required
           />
         </div>
 
         <div>
-          <FieldLabel>الاسم الإنجليزي (اختياري)</FieldLabel>
+          <FieldLabel>English name (optional)</FieldLabel>
           <TextInput
             value={nameEn}
             onChange={(e) => setNameEn(e.target.value)}
@@ -207,7 +212,7 @@ export default function ExerciseSheet({
         </div>
 
         <div>
-          <FieldLabel>المجموعة العضلية</FieldLabel>
+          <FieldLabel>Muscle group</FieldLabel>
           <div className="grid grid-cols-3 gap-2">
             {categories.map((c) => {
               const Icon = categoryIcon(c.icon);
@@ -220,9 +225,9 @@ export default function ExerciseSheet({
                   onClick={() => setCategoryId(c.id)}
                   className="flex flex-col items-center gap-1.5 rounded-xl border py-3 transition-all active:scale-95"
                   style={{
-                    borderColor: active ? col.hex : "rgba(43,61,99,0.9)",
-                    background: active ? col.soft : "rgba(22,34,60,0.5)",
-                    color: active ? col.hex : "#94a3b8",
+                    borderColor: active ? col.hex : "var(--color-card-border)",
+                    background: active ? col.soft : "var(--color-hover)",
+                    color: active ? col.hex : "var(--color-text-muted)",
                   }}
                 >
                   <Icon className="h-5 w-5" />
@@ -234,16 +239,16 @@ export default function ExerciseSheet({
         </div>
 
         {error && (
-          <div role="alert" className="anim-pop rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-300">
+          <div role="alert" className="anim-pop rounded-xl border px-4 py-3 text-sm font-semibold" style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)", color: "var(--color-accent-text)" }}>
             {error}
           </div>
         )}
 
         <div className="flex gap-2">
           <PrimaryButton loading={loading} disabled={loading || uploading}>
-            {loading ? "جارٍ الحفظ..." : isEdit ? "حفظ التعديلات" : "إضافة التمرين"}
+            {loading ? "Saving..." : isEdit ? "Save changes" : "Add exercise"}
           </PrimaryButton>
-          <GhostButton onClick={onClose}>إلغاء</GhostButton>
+          <GhostButton onClick={onClose}>Cancel</GhostButton>
         </div>
       </form>
     </Sheet>

@@ -1,41 +1,37 @@
 /**
- * Formatting helpers — Arabic-first UI copy, but ALL numerals are strictly
- * standard Western digits (0–9): weights, dates, reps, and counters are never
- * rendered in Eastern Arabic numerals (٠–٩).
+ * Formatting helpers — English UI copy with standard Western digits (0-9).
  */
 
-const LATIN = "latn"; // Unicode numbering-system extension → forces 0-9 glyphs
-
-const arDate = new Intl.DateTimeFormat(`ar-EG-u-nu-${LATIN}`, {
+const enDate = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   month: "long",
   year: "numeric",
 });
 
-const arDateShort = new Intl.DateTimeFormat(`ar-EG-u-nu-${LATIN}`, {
+const enDateShort = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   month: "short",
 });
 
-const arWeekday = new Intl.DateTimeFormat(`ar-EG-u-nu-${LATIN}`, {
+const enWeekday = new Intl.DateTimeFormat("en-US", {
   weekday: "long",
 });
 
-/** "12 يناير 2026" — Arabic words, Western digits. */
-export function formatDateAr(iso: string | Date): string {
+/** "March 5, 2026" */
+export function formatDateEn(iso: string | Date): string {
   const d = typeof iso === "string" ? new Date(iso + (iso.length === 10 ? "T00:00:00" : "")) : iso;
-  return arDate.format(d);
+  return enDate.format(d);
 }
 
-/** "5 مارس" */
-export function formatDateArShort(iso: string): string {
-  return arDateShort.format(new Date(iso + "T00:00:00"));
+/** "Mar 5" */
+export function formatDateEnShort(iso: string): string {
+  return enDateShort.format(new Date(iso + "T00:00:00"));
 }
 
-/** "السبت، 5 مارس" */
-export function formatDayAr(iso: string): string {
+/** "Saturday, Mar 5" */
+export function formatDayEn(iso: string): string {
   const d = new Date(iso + "T00:00:00");
-  return `${arWeekday.format(d)}، ${arDateShort.format(d)}`;
+  return `${enWeekday.format(d)}, ${enDateShort.format(d)}`;
 }
 
 /** Today as YYYY-MM-DD (local time). */
@@ -58,14 +54,14 @@ export function daysSince(iso: string): number {
   return Math.round((now - then) / 86_400_000);
 }
 
-/** Greeting by local hour — in Arabic. */
-export function greetingAr(): string {
+/** Greeting by local hour — in English. */
+export function greetingEn(): string {
   const h = new Date().getHours();
-  if (h < 5) return "ليلة حديدية";
-  if (h < 12) return "صباح القوة";
-  if (h < 17) return "نهارك حديد";
-  if (h < 21) return "مساء القوة";
-  return "ليلة حديدية";
+  if (h < 5) return "Late night";
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  if (h < 21) return "Good evening";
+  return "Late night";
 }
 
 interface MotivationInput {
@@ -79,21 +75,21 @@ interface MotivationInput {
 export function motivationalLine(input: MotivationInput): string {
   const { totalPrs, streakWeeks, lastPrDate, trainedThisWeek } = input;
   if (lastPrDate && daysSince(lastPrDate) <= 3) {
-    return "وحش حقيقي! حطّمت رقمًا قياسيًا في الأيام الأخيرة — الحديد لا يكذب أبدًا.";
+    return "Beast mode! You smashed a PR in the last few days — iron never lies.";
   }
   if (lastPrDate && daysSince(lastPrDate) <= 7) {
-    return "أسبوع ذهبي! رقمك القياسي الأخير ما زال يتردد صداه في الصالة.";
+    return "Golden week! Your last PR is still echoing in the gym.";
   }
   if (totalPrs === 0) {
-    return "كل بطل بدأ من الصفر. سجّل أول رقم قياسي لك اليوم وابدأ الأسطورة.";
+    return "Every champion started from zero. Log your first PR today and begin the legend.";
   }
   if (streakWeeks >= 4) {
-    return `${streakWeeks} أسابيع من الانضباط الصارم — جسمك يُعيد تشكيل نفسه.`;
+    return `${streakWeeks} weeks of strict discipline — your body is rebuilding itself.`;
   }
   if (trainedThisWeek) {
-    return "تدربت هذا الأسبوع، الخطوة القادمة: ارفع الحديد أكثر من المرة الماضية.";
+    return "You trained this week. Next step: lift more than last time.";
   }
-  return "الحديد ينتظرك. رقمك القياسي القادم أقرب مما تتخيل — اذهب واحصل عليه.";
+  return "Iron is waiting. Your next PR is closer than you think — go get it.";
 }
 
 /** Counters/quantities always render with standard Western numerals. */
@@ -101,18 +97,18 @@ export function formatCount(n: number | string): string {
   return String(n);
 }
 
-/** Relative "since" label in Arabic (Western digits). */
-export function sinceLabelAr(iso: string): string {
+/** Relative "since" label in English. */
+export function sinceLabelEn(iso: string): string {
   const d = daysSince(iso);
-  if (d <= 0) return "اليوم";
-  if (d === 1) return "أمس";
-  if (d === 2) return "قبل يومين";
-  if (d <= 10) return `قبل ${d} أيام`;
-  if (d < 30) return `قبل ${d} يومًا`;
+  if (d <= 0) return "Today";
+  if (d === 1) return "Yesterday";
+  if (d === 2) return "2 days ago";
+  if (d <= 10) return `${d} days ago`;
+  if (d < 30) return `${d} days ago`;
   const weeks = Math.floor(d / 7);
-  if (weeks < 5) return weeks === 1 ? "قبل أسبوع" : `قبل ${weeks} أسابيع`;
+  if (weeks < 5) return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
   const months = Math.floor(d / 30);
-  return months === 1 ? "قبل شهر" : `قبل ${months} أشهر`;
+  return months === 1 ? "1 month ago" : `${months} months ago`;
 }
 
 /** Compute consecutive weekly training streak ending this week (or last). */

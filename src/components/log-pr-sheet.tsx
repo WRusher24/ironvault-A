@@ -117,15 +117,15 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
     const repsNum = parseInt(reps, 10);
 
     if (!selected && !(canCreateNew && newExerciseCategory)) {
-      setError("اختر تمرينًا من القائمة أو أنشئ تمرينًا جديدًا");
+      setError("Pick an exercise from the list or create a new one");
       return;
     }
     if (!Number.isFinite(weightNum) || weightNum <= 0) {
-      setError("أدخل الوزن بالكيلوغرام — مثال: 80 أو 102.5");
+      setError("Enter weight in kilograms — e.g. 80 or 102.5");
       return;
     }
     if (!Number.isFinite(repsNum) || repsNum < 1) {
-      setError("أدخل عدد التكرارات");
+      setError("Enter the number of reps");
       return;
     }
 
@@ -153,7 +153,7 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
         finish();
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "تعذر حفظ الرقم — حاول مجددًا");
+      setError(err instanceof ApiError ? err.message : "Failed to save — please try again");
     } finally {
       setLoading(false);
     }
@@ -171,27 +171,27 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
 
   return (
     <>
-      <Sheet open={open} onClose={onClose} title="تسجيل رقم قياسي جديد">
+      <Sheet open={open} onClose={onClose} title="Log a New PR">
         <form onSubmit={onSubmit} className="space-y-5">
           {/* Exercise picker */}
           <div>
-            <FieldLabel>التمرين</FieldLabel>
+            <FieldLabel>Exercise</FieldLabel>
             {selected ? (
-              <div className="flex items-center justify-between gap-3 rounded-xl border border-volt-500/50 bg-volt-500/10 px-4 py-3">
+              <div className="flex items-center justify-between gap-3 rounded-xl border px-4 py-3" style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)" }}>
                 <div className="flex items-center gap-2.5">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-volt-500/20">
-                    <Dumbbell className="h-4.5 w-4.5 text-volt-400" />
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: "var(--color-accent-soft)" }}>
+                    <Dumbbell className="h-4.5 w-4.5" style={{ color: "var(--color-accent)" }} />
                   </span>
                   <div>
-                    <p className="text-sm font-black text-white">{selected.name}</p>
-                    <p className="text-[11px] font-semibold text-slate-400">
+                    <p className="text-sm font-black" style={{ color: "var(--color-text)" }}>{selected.name}</p>
+                    <p className="text-[11px] font-semibold" style={{ color: "var(--color-text-muted)" }}>
                       {selected.categoryName}
                       {selected.maxWeight !== null && (
                         <>
                           {" "}
-                          · الأقصى الحالي{" "}
-                          <span className="tabular text-volt-400">
-                            {formatWeight(selected.maxWeight)} كجم
+                          · Current max{" "}
+                          <span className="tabular" style={{ color: "var(--color-accent)" }}>
+                            {formatWeight(selected.maxWeight)} kg
                           </span>
                         </>
                       )}
@@ -204,14 +204,15 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
                     setExerciseId(null);
                     setPickerOpen(true);
                   }}
-                  className="shrink-0 rounded-lg border border-iron-600 px-3 py-1.5 text-xs font-bold text-slate-300 hover:text-white"
+                  className="shrink-0 rounded-lg border px-3 py-1.5 text-xs font-bold"
+                  style={{ borderColor: "var(--color-card-border)", color: "var(--color-text-muted)" }}
                 >
-                  تغيير
+                  Change
                 </button>
               </div>
             ) : (
               <div className="relative">
-                <Search className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-500" />
+                <Search className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2" style={{ color: "var(--color-text-faint)" }} />
                 <input
                   value={query}
                   onChange={(e) => {
@@ -219,16 +220,22 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
                     setPickerOpen(true);
                   }}
                   onFocus={() => setPickerOpen(true)}
-                  placeholder="ابحث أو اكتب اسم تمرين بالعربي أو English…"
-                  className="w-full rounded-xl border border-iron-600 bg-iron-800 py-3 pe-4 ps-11 text-sm text-white placeholder:text-slate-500 focus:border-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/25"
+                  placeholder="Search or type an exercise name..."
+                  className="w-full rounded-xl border py-3 pe-4 ps-11 text-sm focus:outline-none focus:ring-2"
+                  style={{
+                    borderColor: "var(--color-card-border)",
+                    background: "var(--color-input-bg)",
+                    color: "var(--color-text)",
+                    "--tw-ring-color": "var(--color-accent)",
+                  } as React.CSSProperties}
                 />
-                <ChevronDown className="pointer-events-none absolute end-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <ChevronDown className="pointer-events-none absolute end-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: "var(--color-text-faint)" }} />
               </div>
             )}
 
             {/* Dropdown */}
             {pickerOpen && !selected && (
-              <div className="mt-2 max-h-56 overflow-y-auto rounded-xl border border-iron-600 bg-iron-900">
+              <div className="mt-2 max-h-56 overflow-y-auto rounded-xl border" style={{ borderColor: "var(--color-card-border)", background: "var(--color-card)" }}>
                 {filtered.map((ex) => (
                   <button
                     key={ex.id}
@@ -238,30 +245,33 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
                       setQuery("");
                       closePicker();
                     }}
-                    className="flex w-full items-center justify-between gap-2 border-b border-iron-800 px-4 py-2.5 text-start transition-colors last:border-0 hover:bg-iron-800"
+                    className="flex w-full items-center justify-between gap-2 border-b px-4 py-2.5 text-start transition-colors last:border-0"
+                    style={{ borderColor: "var(--color-card-border)" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-hover)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
                   >
                     <span>
-                      <span className="block text-sm font-bold text-white">{ex.name}</span>
-                      <span className="block text-[11px] text-slate-500">
+                      <span className="block text-sm font-bold" style={{ color: "var(--color-text)" }}>{ex.name}</span>
+                      <span className="block text-[11px]" style={{ color: "var(--color-text-faint)" }}>
                         {ex.categoryName}
                         {ex.nameEn ? ` · ${ex.nameEn}` : ""}
                       </span>
                     </span>
                     {ex.maxWeight !== null && (
-                      <span className="tabular shrink-0 rounded-lg bg-iron-800 px-2 py-1 text-[11px] font-black text-ice-300">
-                        {formatWeight(ex.maxWeight)} كجم
+                      <span className="tabular shrink-0 rounded-lg px-2 py-1 text-[11px] font-black" style={{ background: "var(--color-hover)", color: "var(--color-accent)" }}>
+                        {formatWeight(ex.maxWeight)} kg
                       </span>
                     )}
                   </button>
                 ))}
 
                 {canCreateNew && (
-                  <div className="border-t border-iron-700 bg-iron-850/60 px-4 py-3">
-                    <p className="mb-2 flex items-center gap-1.5 text-xs font-bold text-volt-400">
+                  <div className="border-t px-4 py-3" style={{ borderColor: "var(--color-card-border)", background: "var(--color-hover)" }}>
+                    <p className="mb-2 flex items-center gap-1.5 text-xs font-bold" style={{ color: "var(--color-accent)" }}>
                       <BadgePlus className="h-4 w-4" />
-                      تمرين جديد: «{query.trim()}»
+                      New exercise: &ldquo;{query.trim()}&rdquo;
                     </p>
-                    <p className="mb-2 text-[11px] text-slate-500">اختر المجموعة العضلية:</p>
+                    <p className="mb-2 text-[11px]" style={{ color: "var(--color-text-faint)" }}>Choose muscle group:</p>
                     <div className="flex flex-wrap gap-1.5">
                       {categories.map((c) => {
                         const Icon = categoryIcon(c.icon);
@@ -274,9 +284,9 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
                             onClick={() => setNewExerciseCategory(c.id)}
                             className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-bold transition-all active:scale-95"
                             style={{
-                              borderColor: active ? col.hex : "rgba(148,163,184,0.25)",
+                              borderColor: active ? col.hex : "var(--color-card-border)",
                               background: active ? col.soft : "transparent",
-                              color: active ? col.hex : "#94a3b8",
+                              color: active ? col.hex : "var(--color-text-muted)",
                             }}
                           >
                             <Icon className="h-3.5 w-3.5" />
@@ -290,8 +300,8 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
                 )}
 
                 {filtered.length === 0 && !canCreateNew && (
-                  <p className="px-4 py-6 text-center text-xs text-slate-500">
-                    لا توجد تمارين بعد — اكتب اسمًا لإنشاء واحد
+                  <p className="px-4 py-6 text-center text-xs" style={{ color: "var(--color-text-faint)" }}>
+                    No exercises yet — type a name to create one
                   </p>
                 )}
               </div>
@@ -301,31 +311,34 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
           {/* Weight & reps */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <FieldLabel>الوزن الأقصى</FieldLabel>
+              <FieldLabel>Weight</FieldLabel>
               <Stepper
                 value={weight}
                 onChange={setWeight}
                 step={2.5}
                 min={0}
                 max={2000}
-                suffix="كجم kg"
+                suffix="kg"
               />
             </div>
             <div>
-              <FieldLabel>التكرارات</FieldLabel>
-              <Stepper value={reps} onChange={setReps} step={1} min={1} max={500} suffix="تكرار" inputMode="numeric" />
+              <FieldLabel>Reps</FieldLabel>
+              <Stepper value={reps} onChange={setReps} step={1} min={1} max={500} suffix="reps" inputMode="numeric" />
             </div>
           </div>
 
           {/* Quick weight chips */}
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[11px] font-bold text-slate-500">سريع:</span>
+            <span className="text-[11px] font-bold" style={{ color: "var(--color-text-faint)" }}>Quick:</span>
             {[20, 40, 60, 80, 100, 120, 140].map((w) => (
               <button
                 key={w}
                 type="button"
                 onClick={() => setWeight(w.toString())}
-                className="tabular rounded-full border border-iron-600 bg-iron-800 px-3 py-1 text-[11px] font-black text-slate-300 transition-all hover:border-volt-500/60 hover:text-volt-400 active:scale-95"
+                className="tabular rounded-full border px-3 py-1 text-[11px] font-black transition-all active:scale-95"
+                style={{ borderColor: "var(--color-card-border)", background: "var(--color-card)", color: "var(--color-text-muted)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-accent-text)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-card-border)"; e.currentTarget.style.color = "var(--color-text-muted)"; }}
               >
                 {w}
               </button>
@@ -335,29 +348,41 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
           {/* Date & note */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <FieldLabel>التاريخ</FieldLabel>
+              <FieldLabel>Date</FieldLabel>
               <input
                 type="date"
                 value={date}
                 max={todayIso()}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full rounded-xl border border-iron-600 bg-iron-800 px-4 py-3 text-sm text-white focus:border-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/25"
+                className="w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: "var(--color-card-border)",
+                  background: "var(--color-input-bg)",
+                  color: "var(--color-text)",
+                  "--tw-ring-color": "var(--color-accent)",
+                } as React.CSSProperties}
               />
             </div>
             <div>
-              <FieldLabel>ملاحظة (اختياري)</FieldLabel>
+              <FieldLabel>Note (optional)</FieldLabel>
               <input
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 maxLength={300}
-                placeholder='مثال: "Bar + 30kg" أو "قبضة داخلية"'
-                className="w-full rounded-xl border border-iron-600 bg-iron-800 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/25"
+                placeholder='e.g. "Bar + 30kg" or "Inside grip"'
+                className="w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: "var(--color-card-border)",
+                  background: "var(--color-input-bg)",
+                  color: "var(--color-text)",
+                  "--tw-ring-color": "var(--color-accent)",
+                } as React.CSSProperties}
               />
             </div>
           </div>
 
           {error && (
-            <div role="alert" className="anim-pop rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-300">
+            <div role="alert" className="anim-pop rounded-xl border px-4 py-3 text-sm font-semibold" style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)", color: "var(--color-accent-text)" }}>
               {error}
             </div>
           )}
@@ -368,11 +393,11 @@ export default function LogPrSheet({ open, onClose, presetExerciseId }: Props) {
             ) : (
               <Sparkles className="h-4.5 w-4.5" />
             )}
-            {loading ? "جارٍ الحفظ..." : "احفظ الرقم القياسي"}
+            {loading ? "Saving..." : "Save PR"}
           </PrimaryButton>
 
-          <p className="text-center text-[11px] font-semibold text-slate-500">
-            الأوزان بالكيلوغرام (kg) حصرًا — الحديد يُقاس بالحديد.
+          <p className="text-center text-[11px] font-semibold" style={{ color: "var(--color-text-faint)" }}>
+            Weights are in kilograms (kg) only — iron is measured in iron.
           </p>
         </form>
       </Sheet>

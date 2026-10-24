@@ -43,7 +43,7 @@ export default function AuthForm({ mode }: Props) {
       router.replace("/dashboard");
       router.refresh();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "حدث خطأ غير متوقع");
+      setError(err instanceof ApiError ? err.message : "Something went wrong");
       setLoading(false);
     }
   }
@@ -54,55 +54,61 @@ export default function AuthForm({ mode }: Props) {
     <div className="anim-fade-up w-full max-w-md">
       {/* Brand */}
       <div className="mb-8 flex flex-col items-center text-center">
-        <div className="volt-glow relative mb-5 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-volt-500 to-ice-500">
-          <Dumbbell className="h-10 w-10 text-iron-900" strokeWidth={2.4} />
+        <div className="coral-glow relative mb-5 flex h-20 w-20 items-center justify-center rounded-3xl" style={{ background: "var(--color-accent)" }}>
+          <Dumbbell className="h-10 w-10 text-white" strokeWidth={2.4} />
         </div>
-        <h1 className="text-4xl font-black tracking-tight text-white">
-          آيرون <span className="text-volt-400">فالت</span>
+        <h1 className="text-4xl font-black tracking-tight" style={{ color: "var(--color-text)" }}>
+          Iron<span style={{ color: "var(--color-accent)" }}>Vault</span>
         </h1>
-        <p className="mt-2 text-sm text-slate-400">
-          خزنة أرقامك القياسية في الحديد — IronVault
+        <p className="mt-2 text-sm" style={{ color: "var(--color-text-muted)" }}>
+          Your personal PR vault — track progressive overload
         </p>
       </div>
 
-      <div className="glass-card rounded-3xl p-6 sm:p-8">
-        <h2 className="text-xl font-extrabold text-white">
-          {isRegister ? "أنشئ خزنتك الخاصة" : "افتح خزنتك"}
+      <div className="clean-card rounded-3xl p-6 sm:p-8">
+        <h2 className="text-xl font-extrabold" style={{ color: "var(--color-text)" }}>
+          {isRegister ? "Create your vault" : "Open your vault"}
         </h2>
-        <p className="mt-1 mb-6 text-sm leading-relaxed text-slate-400">
+        <p className="mt-1 mb-6 text-sm leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
           {isRegister
-            ? "حساب جديد، وصول فوري — لا حاجة لأي موافقة. بياناتك ملكك وحدك."
-            : "سجّل دخولك وواصل من حيث توقفت. الحديد لا ينتظر."}
+            ? "New account, instant access — no approval needed. Your data is yours alone."
+            : "Log in and pick up where you left off. Iron never waits."}
         </p>
 
         <form onSubmit={onSubmit} className="space-y-4" noValidate>
           {isRegister && (
             <label className="block">
-              <span className="mb-1.5 block text-xs font-bold text-slate-300">الاسم</span>
+              <span className="mb-1.5 block text-xs font-bold" style={{ color: "var(--color-text-muted)" }}>Name</span>
               <div className="relative">
-                <UserRound className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-500" />
+                <UserRound className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2" style={{ color: "var(--color-text-faint)" }} />
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   type="text"
                   required
                   minLength={2}
-                  placeholder="مثال: أحمد بطل الحديد"
-                  className="w-full rounded-xl border border-iron-600 bg-iron-850 py-3 pe-4 ps-11 text-sm text-white placeholder:text-slate-500 focus:border-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/25"
+                  placeholder="e.g. Ahmed, Iron Champion"
+                  className="w-full rounded-xl border py-3 pe-4 ps-11 text-sm focus:outline-none focus:ring-2"
+                  style={{
+                    borderColor: "var(--color-card-border)",
+                    background: "var(--color-input-bg)",
+                    color: "var(--color-text)",
+                    "--tw-ring-color": "var(--color-accent)",
+                  } as React.CSSProperties}
                 />
               </div>
             </label>
           )}
 
           <label className="block">
-            <span className="mb-1.5 block text-xs font-bold text-slate-300">
-              البريد الإلكتروني أو رقم الهاتف
+            <span className="mb-1.5 block text-xs font-bold" style={{ color: "var(--color-text-muted)" }}>
+              Email or phone number
             </span>
             <div className="relative">
               {idIsEmail ? (
-                <Mail className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-500" />
+                <Mail className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2" style={{ color: "var(--color-text-faint)" }} />
               ) : (
-                <Smartphone className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-500" />
+                <Smartphone className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2" style={{ color: "var(--color-text-faint)" }} />
               )}
               <input
                 value={identifier}
@@ -111,30 +117,43 @@ export default function AuthForm({ mode }: Props) {
                 inputMode="email"
                 dir="ltr"
                 required
-                placeholder="you@email.com أو +9655XXXXXXX"
-                className="w-full rounded-xl border border-iron-600 bg-iron-850 py-3 pe-4 ps-11 text-start text-sm text-white placeholder:text-slate-500 focus:border-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/25"
+                placeholder="you@email.com or +9655XXXXXXX"
+                className="w-full rounded-xl border py-3 pe-4 ps-11 text-start text-sm focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: "var(--color-card-border)",
+                  background: "var(--color-input-bg)",
+                  color: "var(--color-text)",
+                  "--tw-ring-color": "var(--color-accent)",
+                } as React.CSSProperties}
               />
             </div>
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block text-xs font-bold text-slate-300">كلمة المرور</span>
+            <span className="mb-1.5 block text-xs font-bold" style={{ color: "var(--color-text-muted)" }}>Password</span>
             <div className="relative">
-              <Lock className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-500" />
+              <Lock className="pointer-events-none absolute start-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2" style={{ color: "var(--color-text-faint)" }} />
               <input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 type={showPassword ? "text" : "password"}
                 required
                 minLength={isRegister ? 8 : 1}
-                placeholder={isRegister ? "8 أحرف على الأقل" : "كلمة المرور"}
-                className="w-full rounded-xl border border-iron-600 bg-iron-850 py-3 pe-11 ps-11 text-sm text-white placeholder:text-slate-500 focus:border-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/25"
+                placeholder={isRegister ? "At least 8 characters" : "Your password"}
+                className="w-full rounded-xl border py-3 pe-11 ps-11 text-sm focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: "var(--color-card-border)",
+                  background: "var(--color-input-bg)",
+                  color: "var(--color-text)",
+                  "--tw-ring-color": "var(--color-accent)",
+                } as React.CSSProperties}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
-                className="absolute end-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-slate-500 transition-colors hover:text-slate-300"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute end-3 top-1/2 -translate-y-1/2 rounded-lg p-1 transition-colors"
+                style={{ color: "var(--color-text-faint)" }}
               >
                 {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
               </button>
@@ -144,7 +163,8 @@ export default function AuthForm({ mode }: Props) {
           {error && (
             <div
               role="alert"
-              className="anim-pop rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-300"
+              className="anim-pop rounded-xl border px-4 py-3 text-sm font-semibold"
+              style={{ borderColor: "var(--color-accent)", background: "var(--color-accent-soft)", color: "var(--color-accent-text)" }}
             >
               {error}
             </div>
@@ -153,32 +173,33 @@ export default function AuthForm({ mode }: Props) {
           <button
             type="submit"
             disabled={loading}
-            className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-l from-volt-500 to-volt-600 py-3.5 text-sm font-black text-iron-950 transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+            className="group relative w-full overflow-hidden rounded-xl py-3.5 text-sm font-black text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
+            style={{ background: "var(--color-accent)" }}
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
               {loading && <LoaderCircle className="h-4 w-4 animate-spin" />}
               {loading
-                ? "لحظات..."
+                ? "One moment..."
                 : isRegister
-                  ? "إنشاء الحساب والدخول فورًا"
-                  : "تسجيل الدخول"}
+                  ? "Create account & enter instantly"
+                  : "Log in"}
             </span>
           </button>
         </form>
 
-        <div className="mt-6 border-t border-iron-700 pt-5 text-center text-sm text-slate-400">
+        <div className="mt-6 border-t pt-5 text-center text-sm" style={{ borderColor: "var(--color-card-border)", color: "var(--color-text-muted)" }}>
           {isRegister ? (
             <>
-              لديك حساب بالفعل؟{" "}
-              <Link href="/login" className="font-bold text-volt-400 transition-colors hover:text-volt-300">
-                سجّل الدخول
+              Already have an account?{" "}
+              <Link href="/login" className="font-bold transition-colors" style={{ color: "var(--color-accent)" }}>
+                Log in
               </Link>
             </>
           ) : (
             <>
-              مستخدم جديد؟{" "}
-              <Link href="/register" className="font-bold text-volt-400 transition-colors hover:text-volt-300">
-                أنشئ حسابك مجانًا
+              New here?{" "}
+              <Link href="/register" className="font-bold transition-colors" style={{ color: "var(--color-accent)" }}>
+                Create your free account
               </Link>
             </>
           )}
@@ -188,13 +209,13 @@ export default function AuthForm({ mode }: Props) {
       {/* Trust strip */}
       <div className="mt-6 grid grid-cols-3 gap-2 text-center">
         {[
-          { icon: ShieldCheck, label: "عزل كامل للبيانات" },
-          { icon: Zap, label: "تسجيل فوري" },
-          { icon: TrendingUp, label: "تتبع الحمل التدريجي" },
+          { icon: ShieldCheck, label: "Full data isolation" },
+          { icon: Zap, label: "Instant logging" },
+          { icon: TrendingUp, label: "Progressive overload tracking" },
         ].map(({ icon: Icon, label }) => (
-          <div key={label} className="flex flex-col items-center gap-1.5 rounded-2xl border border-iron-700/70 bg-iron-850/60 px-2 py-3">
-            <Icon className="h-4.5 w-4.5 text-volt-400" />
-            <span className="text-[10px] font-bold leading-tight text-slate-400">{label}</span>
+          <div key={label} className="flex flex-col items-center gap-1.5 rounded-2xl border px-2 py-3" style={{ borderColor: "var(--color-card-border)", background: "var(--color-card)" }}>
+            <Icon className="h-4.5 w-4.5" style={{ color: "var(--color-accent)" }} />
+            <span className="text-[10px] font-bold leading-tight" style={{ color: "var(--color-text-muted)" }}>{label}</span>
           </div>
         ))}
       </div>
